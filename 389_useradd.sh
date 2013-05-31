@@ -24,35 +24,21 @@ if [ "$UserName" == "" ]; then
 FirstInitial=`echo $FirstName | cut -c1`
 UserName=`echo "${FirstInitial}${LastName}" | tr "[:upper:]" "[:lower:]"`
 fi
+
+echo "dn: uid=$UserName, ou=People, dc=theyjas,dc=com"
+echo "changetype: add"
+echo "uid: $UserName"
+echo "objectClass: top"
+echo "objectClass: person"
+echo "objectClass: organizationalPerson"echo
+echo "objectClass: inetorgperson"
+echo "objectClass: posixAccount"
+echo "cn: $FirstName $LastName"
+echo "sn: $LastName"
+echo "givenName: $FirstName $LastName"
+echo "gidNumber: $GroupID"
+echo "uidNumber: $UserID"
+echo "userPassword: {clear}$Password"
+echo "loginShell: $Shell"
+echo "homeDirectory: /home/$UserName"
 echo
-echo
-echo
-echo
-echo
-echo
-"dn: uid=$UserName, ou=People, dc=theyjas,dc=com"
-"changetype: add"
-"uid: $UserName"
-"objectClass: top"
-"objectClass: person"
-"objectClass: organizationalPerson"echo
-echo
-echo
-echo
-echo
-echo
-echo
-echo
-echo
-echo
-echo
-"objectClass: inetorgperson"
-"objectClass: posixAccount"
-"cn: $FirstName $LastName"
-"sn: $LastName"
-"givenName: $FirstName $LastName"
-"gidNumber: $GroupID"
-"uidNumber: $UserID"
-"userPassword: {clear}$Password"
-"loginShell: $Shell"
-"h
