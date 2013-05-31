@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function Usage {
-    echo "Usage: $0 -f FirstName -l LastName -u UserName [ -i UserID -s shell -g GroupID -p password]"
+    echo "Usage: $0 -f FirstName -l LastName -u UserName [ -i UserID -g GroupID -p password]"
     exit 1
 }
 
