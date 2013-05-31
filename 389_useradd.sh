@@ -35,6 +35,7 @@ if [ "$UserName" == "" ]; then
     UserName=`echo "${FirstInitial}${LastName}" | tr "[:upper:]" "[:lower:]"`
 fi
 
+# Print LDIF for user account
 echo "dn: uid=$UserName, ou=People, dc=ilri,dc=cgiar,dc=org"
 echo "changetype: add"
 echo "givenName: $FirstName $LastName"
@@ -52,4 +53,15 @@ echo "gecos: $FirstName $LastName"
 echo "cn: $FirstName $LastName"
 echo "userPassword: {clear}$Password"
 echo "homeDirectory: /home/$UserName"
+echo
+
+# Print LDIF for primary group account
+echo "dn: cn=$UserName, ou=Groups, dc=ilri,dc=cgiar,dc=org"
+echo "changetype: add"
+echo "gidNumber: $GroupID"
+echo "memberUid: $UserName"
+echo "objectClass: top"
+echo "objectClass: groupofuniquenames"
+echo "objectClass: posixgroup"
+echo "cn: $UserName"
 echo
