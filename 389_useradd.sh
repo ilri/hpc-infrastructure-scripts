@@ -1,12 +1,11 @@
 #!/bin/bash
 
 function Usage {
-    echo "Usage: $0 -f FirstName -l LastName -u UserName -i UserID [ -s shell -g GroupID -p password]"
+    echo "Usage: $0 -f FirstName -l LastName -u UserName [ -i UserID -s shell -g GroupID -p password]"
     exit 1
 }
 
 SHELL=/bin/bash
-GroupID=100
 Password=redhat
 
 while getopts f:g:i:l:i:p:u: OPTION
@@ -23,7 +22,14 @@ done
 
 if [ "$FirstName" == "" ]; then Usage; fi
 if [ "$LastName" == "" ]; then Usage; fi
-if [ "$UserID" == "" ]; then Usage; fi
+if [ "$UserID" == "" ]; then
+    LatestUID=`ldapsearch -x "objectclass=posixAccount" uidNumber | grep -v \^dn | grep -v \^\$ | sed -e 's/uidNumber: //g' | grep -E "^[0-9]{3,4}$" | sort -n | tail -n 1`
+    UserID=$((LatestUID + 1))
+fi
+if [ "$GroupID" == "" ]; then
+    LatestGID=`ldapsearch -x "objectclass=posixAccount" gidNumber | grep -v \^dn | grep -v \^\$ | sed -e 's/gidNumber: //g' | grep -E "^[0-9]{3,4}$" | sort -n | tail -n 1`
+    GroupID=$((LatestGID + 1))
+fi
 if [ "$UserName" == "" ]; then
     FirstInitial=`echo $FirstName | cut -c1`
     UserName=`echo "${FirstInitial}${LastName}" | tr "[:upper:]" "[:lower:]"`
