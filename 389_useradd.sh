@@ -51,7 +51,9 @@ echo "objectClass: posixAccount"
 echo "uid: $UserName"
 echo "gecos: $FirstName $LastName"
 echo "cn: $FirstName $LastName"
-echo "userPassword: {clear}$Password"
+# send password in clear text, so 389 can hash using the best scheme
+# see: https://lists.fedoraproject.org/pipermail/389-users/2012-August/014908.html
+echo "userPassword: $Password"
 echo "homeDirectory: /home/$UserName"
 echo
 
