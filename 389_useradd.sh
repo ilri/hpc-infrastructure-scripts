@@ -34,7 +34,7 @@ echo "changetype: add"
 echo "uid: $UserName"
 echo "objectClass: top"
 echo "objectClass: person"
-echo "objectClass: organizationalPerson"echo
+echo "objectClass: organizationalPerson"
 echo "objectClass: inetorgperson"
 echo "objectClass: posixAccount"
 echo "cn: $FirstName $LastName"
