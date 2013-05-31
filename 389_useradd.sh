@@ -29,7 +29,7 @@ if [ "$UserName" == "" ]; then
     UserName=`echo "${FirstInitial}${LastName}" | tr "[:upper:]" "[:lower:]"`
 fi
 
-echo "dn: uid=$UserName, ou=People, dc=theyjas,dc=com"
+echo "dn: uid=$UserName, ou=People, dc=ilri,dc=cgiar,dc=org"
 echo "changetype: add"
 echo "uid: $UserName"
 echo "objectClass: top"
