@@ -8,7 +8,7 @@ function Usage {
 SHELL=/bin/bash
 Password=redhat
 
-while getopts f:g:i:l:i:p:u: OPTION
+while getopts f:g:i:l:i:p:u:h OPTION
 do
     case $OPTION in
         f) FirstName=$OPTARG;;
@@ -17,6 +17,7 @@ do
         l) LastName=$OPTARG;;
         p) Password=$OPTARG;;
         u) UserName=$OPTARG;;
+        h) Usage;;
     esac
 done
 
