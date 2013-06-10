@@ -57,7 +57,7 @@ printf "cn: %s %s\n" "$FirstName" "$LastName"
 printf "userPassword: %s\n" "$Password"
 printf "homeDirectory: /home/%s\n\n" "$UserName"
 
-# Print LDIF for primary group account
+# Print LDIF for primary group
 printf "dn: cn=%s, ou=Groups, dc=ilri,dc=cgiar,dc=org\n" "$UserName"
 printf "changetype: add\n"
 printf "gidNumber: %d\n" "$GroupID"
