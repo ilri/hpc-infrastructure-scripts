@@ -1,0 +1,22 @@
+#!/bin/bash
+
+LOCK_FILE=/var/lock/subsys/arch_mirror
+NETWORK_MIRROR=mirror.bytemark.co.uk
+#NETWORK_MIRROR=lug.mtu.edu
+DESTINATION_TOP=/export/data/mirror/archlinux
+
+# check to make sure we're not already running
+if [ -f $LOCK_FILE ]; then
+    echo "Arch Linux mirror script already running."
+    exit 1
+fi
+
+# sync all versions
+if [ -d $DESTINATION_TOP/$version ] ; then
+    touch $LOCK_FILE
+    rsync -avSHP --timeout=300 --delete --exclude=*testing --exclude=*staging --exclude=*unstable --exclude=iso --exclude=project --exclude=*/*/i686 --exclude=*i686.pkg* $NETWORK_MIRROR::archlinux/ $DESTINATION_TOP
+    /bin/rm -f $LOCK_FILE
+else
+    echo "Target directory $DESTINATION_TOP/$version not present."
+    exit 1
+fi

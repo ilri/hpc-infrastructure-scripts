@@ -1,0 +1,25 @@
+#!/bin/bash
+
+MINOR_VERSIONS=(5.9 6.4)
+LOCK_FILE=/var/lock/subsys/centos_mirror
+NETWORK_MIRROR=centos.mirror.root.lu
+#NETWORK_MIRROR=mirror.nsc.liu.se
+DESTINATION_TOP=/export/data/mirror/CentOS
+
+# check to make sure we're not already running
+if [ -f $LOCK_FILE ]; then
+    echo "CentOS mirror script already running."
+    exit 1
+fi
+
+# sync all versions
+for version in ${MINOR_VERSIONS[@]}; do
+    if [ -d $DESTINATION_TOP/$version ] ; then
+        touch $LOCK_FILE
+        rsync -avSHP --timeout=300 --delete --exclude "local*" --exclude "isos" $NETWORK_MIRROR::CentOS/$version/ $DESTINATION_TOP/$version/
+        /bin/rm -f $LOCK_FILE
+    else
+        echo "Target directory $DESTINATION_TOP/$version not present."
+        exit 1
+    fi
+done

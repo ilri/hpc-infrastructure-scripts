@@ -1,0 +1,24 @@
+#!/bin/bash
+
+MINOR_VERSIONS=(6)
+LOCK_FILE=/var/lock/subsys/epel_mirror
+NETWORK_MIRROR=mirror.nsc.liu.se
+DESTINATION_TOP=/export/data/mirror/EPEL
+
+# check to make sure we're not already running
+if [ -f $LOCK_FILE ]; then
+    echo "EPEL mirror script already running."
+    exit 1
+fi
+
+# sync all versions
+for version in ${MINOR_VERSIONS[@]}; do
+    if [ -d $DESTINATION_TOP/$version ] ; then
+        touch $LOCK_FILE
+        rsync -avSHP --timeout=300 --delete --exclude "ppc64" $NETWORK_MIRROR::fedora-epel/$version/ $DESTINATION_TOP/$version/
+        /bin/rm -f $LOCK_FILE
+    else
+        echo "Target directory $DESTINATION_TOP/$version not present."
+        exit 1
+    fi
+done
