@@ -1,0 +1,99 @@
+#!/bin/bash
+#
+#######################################
+# interactive: Obtain interactive shell
+#
+# Basically simulates:
+#
+#    salloc -n1 srun --x11 --pty bash
+#######################################
+# Alan Orth
+# a.orth@cgiar.org
+# April, 2013
+#######################################
+
+# defaults
+DEF_NUM_CPUS=1
+DEF_PARTITION=batch
+
+######
+ 
+function help() {
+    echo -e "Usage: `basename $0` [-c] [-p] \n"
+    echo "Optional arguments:"
+    echo -e "\t -c: number of CPU cores to request (default: $DEF_NUM_CPUS)"
+    echo -e "\t -p: partition to run job in (default: $DEF_PARTITION)"
+    echo -e "\t -J: job name"
+
+    echo -e "\nWritten by: Alan Orth <a.orth@cgiar.org>"
+
+    exit 0
+}
+
+function parse_options() {
+    while getopts ":c:p:J:" opt; do
+        case $opt in
+            c)
+                # make sure -c is passed a valid integer
+                if ! [[ "$OPTARG" =~ ^[0-9]+$ ]]; then
+                    help
+                fi
+
+                NUM_CPUS=$OPTARG
+                ;;
+            p)
+                PARTITION=$OPTARG
+                ;;
+            J)
+                JOB_NAME=$OPTARG
+                ;;
+            \?|:)
+                help
+                ;;
+        esac
+    done
+}
+
+function envsetup() {
+    SALLOC_BIN=/usr/bin/salloc
+
+    # default is to request 1 CPU, unless more are requested
+    if [[ $NUM_CPUS -gt $DEF_NUM_CPUS ]]; then
+        SALLOC_OPTS="-n $NUM_CPUS"
+    else
+        SALLOC_OPTS="-n $DEF_NUM_CPUS"
+    fi
+
+    # check for a job name
+    if [[ -n "$JOB_NAME" ]]; then
+        echo "jobname: $JOB_NAME"
+        SALLOC_OPTS="$SALLOC_OPTS -J $JOB_NAME"
+    fi
+
+    # see if the user specified a partition
+    if [[ -n "$PARTITION" ]]; then
+        SALLOC_OPTS="$SALLOC_OPTS -p $PARTITION"
+    else
+        SALLOC_OPTS="$SALLOC_OPTS -p $DEF_PARTITION"
+    fi
+
+    # check if we want X11
+    if [[ -n "$DISPLAY" ]]; then
+        SRUN_OPTS="--x11 --pty"
+    else
+        SRUN_OPTS="--pty"
+    fi
+
+    SRUN_BIN=/usr/bin/srun
+
+    INTERACTIVE_SHELL=/bin/bash
+    SHELL_OPTS="-i -l" # not sure if needed
+}
+
+# pass the shell's argument array to the parsing function
+parse_options "$@"
+
+# setup the defaults
+envsetup
+
+$SALLOC_BIN $SALLOC_OPTS $SRUN_BIN $SRUN_OPTS $INTERACTIVE_SHELL
