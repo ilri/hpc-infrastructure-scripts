@@ -1,0 +1,38 @@
+; ini-style settings
+;
+; Recognized variables:
+;   - username - username for a database
+;   - password - password for a database
+;   - databases - 1 or more databases names
+;   - backup_dir - directory to put backups
+;   - keep - how long to keep backups (must be quoted, ie keep="1 week ago")
+; 
+; Variables generally follow bash-style rules, ie:
+;   - arrays are parsed on spaces (var=1 2 3)
+;   - quote them if you have special characters (spaces, etc)
+; 
+; Regarding the formatting of "keep" values
+;   - the value is like those interpreted by GNU date's -d option
+;   - see '-newerXY' in the find manpage
+
+[postgres]
+username=me
+password=p@ssw0rd
+databases=db1 db2
+backup_dir=/home/backup/postgres
+keep="2 weeks ago"
+
+[mysql]
+username=me
+password=p@assw0rd
+databases=db1
+backup_dir=/home/backup/mysql
+keep="2 weeks ago"
+
+[etc]
+backup_dir=/home/backup/etc
+keep="1 month ago"
+
+; list sections which should be cleaned
+[cleanup]
+sections=postgres etc
