@@ -15,17 +15,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#######################################
-# interactive: Obtain interactive shell
+#
+# interactive: Obtain interactive shell with slurm allocation
 #
 # Basically simulates:
 #
 #    salloc -n1 srun --x11 --pty bash
-#######################################
-# Alan Orth
-# a.orth@cgiar.org
-# April, 2013
-#######################################
 
 # defaults
 DEF_NUM_CPUS=1
