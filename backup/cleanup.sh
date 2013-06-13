@@ -15,8 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-FUNCTIONS=/home/backup/scripts/functions.sh
-SETTINGS=/home/backup/scripts/settings.ini
+FUNCTIONS=/home/backup/scripts/backup/functions.sh
+SETTINGS=/home/backup/scripts/backup/settings.ini
 
 [ -e "$FUNCTIONS" ] || exit 1
 source "$FUNCTIONS"
