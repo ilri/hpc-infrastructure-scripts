@@ -33,6 +33,6 @@ for SECTION in "${sections[@]}"; do
     # read variables in section
     cfg.section.$SECTION
 
-    find "${backup_dir}" -type f ! -newermt "${keep[@]}" ! -name "*.sh"
+    find "${backup_dir}" -type f ! -newermt "${keep[@]}" ! -name "*.sh" -delete
 
 done
