@@ -25,6 +25,7 @@
 # defaults
 DEF_NUM_CPUS=1
 DEF_PARTITION=batch
+DEF_JOB_NAME=interactive
 
 ######
  
@@ -76,8 +77,9 @@ function envsetup() {
 
     # check for a job name
     if [[ -n "$JOB_NAME" ]]; then
-        echo "jobname: $JOB_NAME"
         SALLOC_OPTS="$SALLOC_OPTS -J $JOB_NAME"
+    else
+        SALLOC_OPTS="$SALLOC_OPTS -J $DEF_JOB_NAME"
     fi
 
     # see if the user specified a partition
