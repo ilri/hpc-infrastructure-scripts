@@ -88,7 +88,7 @@ printf "objectClass: posixgroup\n"
 printf "cn: %s\n\n" "$UserName"
 
 # add user to SSH group
-printf "dn: cn=ssh, ou=groups, dc=ilri,dc=cgiar,dc=org\n"
+printf "dn: cn=ssh, ou=Groups, dc=ilri,dc=cgiar,dc=org\n"
 printf "changetype: modify\n"
 printf "add: memberuid\n"
 printf "memberuid: %s\n" "$UserName"
