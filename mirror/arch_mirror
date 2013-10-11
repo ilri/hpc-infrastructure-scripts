@@ -14,7 +14,7 @@ fi
 # sync all versions
 if [ -d $DESTINATION_TOP/$version ] ; then
     touch $LOCK_FILE
-    rsync -avSHP --timeout=300 --delete $NETWORK_MIRROR::pub/archlinux/ $DESTINATION_TOP
+    rsync -avSHP --timeout=300 --delete --delete-delay --delay-updates $NETWORK_MIRROR::pub/archlinux/ $DESTINATION_TOP
     /bin/rm -f $LOCK_FILE
 else
     echo "Target directory $DESTINATION_TOP/$version not present."
