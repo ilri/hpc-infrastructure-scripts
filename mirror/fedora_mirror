@@ -1,0 +1,72 @@
+#!/bin/bash
+
+LOCK_FILE=/var/lock/subsys/fedora_mirror
+NETWORK_MIRROR=mirror.itc.virginia.edu
+DESTINATION_TOP=/export/data/mirror/fedora
+BACKUP_LIST_FILE=`mktemp`
+
+# check to make sure we're not already running
+if [ -f $LOCK_FILE ]; then
+    echo "Fedora mirror script already running."
+    exit 1
+fi
+
+# Excludes
+# mirror current stable releases only (18,19), and skip
+# debug and source stuff to keep mirror size down
+cat > $BACKUP_LIST_FILE <<LIST
+alt
+archive
+linux/core
+linux/development
+linux/extras
+linux/releases/7
+linux/releases/8
+linux/releases/9
+linux/releases/10
+linux/releases/11
+linux/releases/12
+linux/releases/13
+linux/releases/14
+linux/releases/15
+linux/releases/16
+linux/releases/17
+linux/updates/7
+linux/updates/8
+linux/updates/9
+linux/updates/10
+linux/updates/11
+linux/updates/12
+linux/updates/13
+linux/updates/14
+linux/updates/15
+linux/updates/16
+linux/updates/17
+linux/updates/18/i386/debug
+linux/updates/18/x86_64/debug
+linux/updates/18/SRPMS
+linux/updates/19/i386/debug
+linux/updates/19/x86_64/debug
+linux/updates/19/SRPMS
+linux/updates/20
+linux/updates/testing
+linux/releases/18/Everything/*/debug
+linux/releases/18/Everything/source
+linux/releases/18/Fedora/source
+linux/releases/19/Everything/*/debug
+linux/releases/19/Everything/source
+linux/releases/19/Fedora/source
+linux/releases/test
+LIST
+
+if [ -d $DESTINATION_TOP ] ; then
+    touch $LOCK_FILE
+    rsync -vaH --timeout=300 --numeric-ids --delete --delete-delay --delay-updates --delete-excluded --exclude-from=$BACKUP_LIST_FILE $NETWORK_MIRROR::fedora-enchilada $DESTINATION_TOP
+    /bin/rm -f $LOCK_FILE
+    /bin/rm -f $BACKUP_LIST_FILE
+else
+    echo "Target directory $DESTINATION_TOP not present."
+    exit 1
+fi
+
+report_mirror
