@@ -2,8 +2,7 @@
 
 MINOR_VERSIONS=(5.9 6.4 6.5)
 LOCK_FILE=/var/lock/subsys/centos_mirror
-NETWORK_MIRROR=centos.mirror.root.lu
-#NETWORK_MIRROR=mirror.nsc.liu.se
+NETWORK_MIRROR=mirror.nsc.liu.se
 DESTINATION_TOP=/export/data/mirror/CentOS
 
 # check to make sure we're not already running
