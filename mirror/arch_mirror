@@ -17,6 +17,6 @@ if [ -d $DESTINATION_TOP/$version ] ; then
     rsync -avSHP --timeout=300 --delete --delete-delay --delay-updates $NETWORK_MIRROR::pub/archlinux/ $DESTINATION_TOP
     /bin/rm -f $LOCK_FILE
 else
-    echo "Target directory $DESTINATION_TOP/$version not present."
+    echo "Target directory $DESTINATION_TOP not present."
     exit 1
 fi
