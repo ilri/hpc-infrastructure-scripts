@@ -22,3 +22,5 @@ for version in ${MINOR_VERSIONS[@]}; do
         exit 1
     fi
 done
+
+exit 0
