@@ -48,7 +48,10 @@ linux/updates/18/SRPMS
 linux/updates/19/i386/debug
 linux/updates/19/x86_64/debug
 linux/updates/19/SRPMS
-linux/updates/20
+linux/updates/20/armhfp
+linux/updates/20/i386/debug
+linux/updates/20/x86_64/debug
+linux/updates/20/SRPMS
 linux/updates/testing
 linux/releases/18/Everything/*/debug
 linux/releases/18/Everything/source
@@ -56,6 +59,12 @@ linux/releases/18/Fedora/source
 linux/releases/19/Everything/*/debug
 linux/releases/19/Everything/source
 linux/releases/19/Fedora/source
+linux/releases/20/Everything/armhfp
+linux/releases/20/Everything/*/debug
+linux/releases/20/Everything/source
+linux/releases/20/Fedora/armhfp
+linux/releases/20/Fedora/source
+linux/releases/20/Images/armhfp
 linux/releases/test
 LIST
 
