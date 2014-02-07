@@ -18,11 +18,11 @@
 FUNCTIONS=/home/backup/scripts/backup/functions.sh
 SETTINGS=/home/backup/scripts/backup/settings.ini
 
-[ -e "$FUNCTIONS" ] || exit 1
+[[ -e "$FUNCTIONS" ]] || exit 1
 source "$FUNCTIONS"
 
 # parse settings
-[ -e "$SETTINGS" ] || exit 1
+[[ -e "$SETTINGS" ]] || exit 1
 cfg_parser "$SETTINGS"
 
 # read variables in [postgres] section
