@@ -16,7 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # ---
 #
-# Adapted from an example on the 389-users mailing list, can't find it now.
+# Portions Copyright (C) 2013 Orion Poplawski
+# https://www.redhat.com/archives/freeipa-users/2013-January/msg00075.html
 
 #
 # backup-389.sh: Make backups of 389 LDAP using db2bak and db2ldif
