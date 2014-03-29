@@ -4,20 +4,42 @@ LOCK_FILE=/var/lock/subsys/arch_mirror
 NETWORK_MIRROR=ftp.lysator.liu.se
 #NETWORK_MIRROR=lug.mtu.edu
 DESTINATION_TOP=/export/data/mirror/archlinux
-RSYNC_OPTS="-avSHP --timeout=300 --delete --delete-delay --delay-updates"
+
+# Default options for *every* rsync call
+RSYNC_OPTIONS="-prltvHSB8192 --timeout 600 --stats"
+# Options we only use in the first pass, where we do not want packages/sources to fly in yet and don't want to delete files
+RSYNC_OPTIONS1=""
+# Excludes for the first pass
+EXCLUDE="--exclude=*.db --exclude=*.db.tar.gz --exclude=*.files.tar.gz --exclude=lastsync --exclude=lastupdate"
+# Options for the second pass, where we do want everything, including deletion of old and now unused files
+RSYNC_OPTIONS2="--max-delete=1000 --delay-updates --delete"
+# Which rsync share to use on our upstream mirror?
+RSYNC_PATH="pub/archlinux/"
 
 # check to make sure we're not already running
-if [ -f $LOCK_FILE ]; then
-    echo "Arch Linux mirror script already running."
+if [[ -f $LOCK_FILE ]]; then
+    echo "Arch Linux mirror script already running." 1>&2
     exit 1
 fi
 
-# sync all versions
-if [ -d $DESTINATION_TOP/$version ] ; then
-    touch $LOCK_FILE
-    rsync $RSYNC_OPTS $NETWORK_MIRROR::pub/archlinux/ $DESTINATION_TOP
-    /bin/rm -f $LOCK_FILE
-else
-    echo "Target directory $DESTINATION_TOP not present."
+# Check if destination exists
+if [[ ! -d $DESTINATION_TOP ]]; then
+    echo "Target directory $DESTINATION_TOP not present." 1>&2
     exit 1
 fi
+
+## Start sync
+touch $LOCK_FILE
+
+# stage1 sync (packages)
+echo "Running stage1: rsync ${RSYNC_OPTIONS} ${RSYNC_OPTIONS1} ${EXCLUDE} ${NETWORK_MIRROR}::${RSYNC_PATH} ${DESTINATION_TOP}"
+rsync ${RSYNC_OPTIONS} ${RSYNC_OPTIONS1} ${EXCLUDE} ${NETWORK_MIRROR}::${RSYNC_PATH} "${DESTINATION_TOP}"
+
+# check if stage1 exited ok
+if [[ $? -eq 0 ]]; then
+    echo "Running stage2: rsync ${RSYNC_OPTIONS} ${RSYNC_OPTIONS2} ${NETWORK_MIRROR}::${RSYNC_PATH} ${DESTINATION_TOP}"
+    rsync ${RSYNC_OPTIONS} ${RSYNC_OPTIONS2} ${NETWORK_MIRROR}::${RSYNC_PATH} "${DESTINATION_TOP}"
+
+fi
+
+/bin/rm -f $LOCK_FILE
