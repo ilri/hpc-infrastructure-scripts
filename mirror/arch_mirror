@@ -4,6 +4,7 @@ LOCK_FILE=/var/lock/subsys/arch_mirror
 NETWORK_MIRROR=ftp.lysator.liu.se
 #NETWORK_MIRROR=lug.mtu.edu
 DESTINATION_TOP=/export/data/mirror/archlinux
+RSYNC_OPTS="-avSHP --timeout=300 --delete --delete-delay --delay-updates"
 
 # check to make sure we're not already running
 if [ -f $LOCK_FILE ]; then
@@ -14,7 +15,7 @@ fi
 # sync all versions
 if [ -d $DESTINATION_TOP/$version ] ; then
     touch $LOCK_FILE
-    rsync -avSHP --timeout=300 --delete --delete-delay --delay-updates $NETWORK_MIRROR::pub/archlinux/ $DESTINATION_TOP
+    rsync $RSYNC_OPTS $NETWORK_MIRROR::pub/archlinux/ $DESTINATION_TOP
     /bin/rm -f $LOCK_FILE
 else
     echo "Target directory $DESTINATION_TOP not present."
