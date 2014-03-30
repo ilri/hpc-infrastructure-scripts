@@ -7,7 +7,7 @@ BACKUP_LIST_FILE=`mktemp`
 
 # check to make sure we're not already running
 if [ -f $LOCK_FILE ]; then
-    echo "Fedora mirror script already running."
+    echo "Fedora mirror script already running." 1>&2
     exit 1
 fi
 
@@ -74,7 +74,7 @@ if [ -d $DESTINATION_TOP ] ; then
     /bin/rm -f $LOCK_FILE
     /bin/rm -f $BACKUP_LIST_FILE
 else
-    echo "Target directory $DESTINATION_TOP not present."
+    echo "Target directory $DESTINATION_TOP not present." 1>&2
     exit 1
 fi
 
