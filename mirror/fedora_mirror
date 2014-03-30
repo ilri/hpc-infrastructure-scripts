@@ -70,7 +70,7 @@ LIST
 
 if [ -d $DESTINATION_TOP ] ; then
     touch $LOCK_FILE
-    rsync -vaH --timeout=300 --numeric-ids --delete --delete-delay --delay-updates --delete-excluded --exclude-from=$BACKUP_LIST_FILE $NETWORK_MIRROR::fedora-enchilada $DESTINATION_TOP
+    rsync -vaH --timeout=600 --numeric-ids --delete --delete-delay --delay-updates --delete-excluded --exclude-from=$BACKUP_LIST_FILE $NETWORK_MIRROR::fedora-enchilada $DESTINATION_TOP
     /bin/rm -f $LOCK_FILE
     /bin/rm -f $BACKUP_LIST_FILE
 else
