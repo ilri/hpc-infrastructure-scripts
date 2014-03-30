@@ -1,8 +1,7 @@
 #!/bin/bash
 
 LOCK_FILE=/var/lock/subsys/arch_mirror
-NETWORK_MIRROR=ftp.lysator.liu.se
-#NETWORK_MIRROR=lug.mtu.edu
+NETWORK_MIRROR=ftp.snt.utwente.nl
 DESTINATION_TOP=/export/data/mirror/archlinux
 
 # Default options for *every* rsync call
@@ -14,7 +13,7 @@ EXCLUDE="--exclude=*.db --exclude=*.db.tar.gz --exclude=*.files.tar.gz --exclude
 # Options for the second pass, where we do want everything, including deletion of old and now unused files
 RSYNC_OPTIONS2="--max-delete=1000 --delay-updates --delete"
 # Which rsync share to use on our upstream mirror?
-RSYNC_PATH="pub/archlinux/"
+RSYNC_PATH="archlinux"
 
 # check to make sure we're not already running
 if [[ -f $LOCK_FILE ]]; then
@@ -39,7 +38,6 @@ rsync ${RSYNC_OPTIONS} ${RSYNC_OPTIONS1} ${EXCLUDE} ${NETWORK_MIRROR}::${RSYNC_P
 if [[ $? -eq 0 ]]; then
     echo "Running stage2: rsync ${RSYNC_OPTIONS} ${RSYNC_OPTIONS2} ${NETWORK_MIRROR}::${RSYNC_PATH} ${DESTINATION_TOP}"
     rsync ${RSYNC_OPTIONS} ${RSYNC_OPTIONS2} ${NETWORK_MIRROR}::${RSYNC_PATH} "${DESTINATION_TOP}"
-
 fi
 
 /bin/rm -f $LOCK_FILE
