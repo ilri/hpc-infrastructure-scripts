@@ -11,7 +11,7 @@ RSYNC_OPTIONS1=""
 # Excludes for the first pass
 EXCLUDE="--exclude=*.db --exclude=*.db.tar.gz --exclude=*.files.tar.gz --exclude=lastsync --exclude=lastupdate"
 # Options for the second pass, where we do want everything, including deletion of old and now unused files
-RSYNC_OPTIONS2="--max-delete=1000 --delay-updates --delete"
+RSYNC_OPTIONS2="--max-delete=1000 --delay-updates --delete --delete-excluded"
 # Which rsync share to use on our upstream mirror?
 RSYNC_PATH="archlinux"
 
