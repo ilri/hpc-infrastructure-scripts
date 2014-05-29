@@ -70,6 +70,8 @@ function parse_options() {
 
 function envsetup() {
     SALLOC_BIN=/usr/bin/salloc
+    SRUN_BIN=/usr/bin/srun
+    INTERACTIVE_SHELL=/bin/bash
 
     # default is to request 1 CPU, unless more are requested
     if [[ $NUM_CPUS -gt $DEF_NUM_CPUS ]]; then
@@ -98,11 +100,6 @@ function envsetup() {
     else
         SRUN_OPTS="--pty"
     fi
-
-    SRUN_BIN=/usr/bin/srun
-
-    INTERACTIVE_SHELL=/bin/bash
-    SHELL_OPTS="-i -l" # not sure if needed
 }
 
 # pass the shell's argument array to the parsing function
