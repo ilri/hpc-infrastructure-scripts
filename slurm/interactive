@@ -48,8 +48,6 @@ EOF
 }
 
 function parse_options() {
-    envsetup
-
     while getopts ":c:p:J:" opt; do
         case $opt in
             c)
