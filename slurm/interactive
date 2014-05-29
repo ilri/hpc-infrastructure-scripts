@@ -69,9 +69,9 @@ function parse_options() {
 }
 
 function envsetup() {
-    SALLOC_BIN=/usr/bin/salloc
-    SRUN_BIN=/usr/bin/srun
-    INTERACTIVE_SHELL=/bin/bash
+    readonly SALLOC_BIN=/usr/bin/salloc
+    readonly SRUN_BIN=/usr/bin/srun
+    readonly INTERACTIVE_SHELL=/bin/bash
 
     # default is to request 1 CPU, unless more are requested
     if [[ $NUM_CPUS -gt $DEF_NUM_CPUS ]]; then
