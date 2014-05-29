@@ -39,7 +39,7 @@ Usage: $PROGNAME [-c] [-p] [-J]
 Optional arguments:
     -c: number of CPU cores to request (default: $DEF_NUM_CPUS)
     -p: partition to run job in (default: $DEF_PARTITION)
-    -J: job name
+    -J: job name (default: $DEF_JOB_NAME)
 
 Written by: Alan Orth <a.orth@cgiar.org>
 EOF
