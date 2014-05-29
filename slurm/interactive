@@ -23,9 +23,9 @@
 #    salloc -n1 srun --x11 --pty bash
 
 # defaults
-DEF_NUM_CPUS=1
-DEF_PARTITION=batch
-DEF_JOB_NAME=interactive
+readonly DEF_NUM_CPUS=1
+readonly DEF_PARTITION=batch
+readonly DEF_JOB_NAME=interactive
 
 ######
  
