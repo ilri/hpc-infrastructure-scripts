@@ -48,12 +48,14 @@ EOF
 }
 
 function parse_options() {
+    envsetup
+
     while getopts ":c:p:J:" opt; do
         case $opt in
             c)
                 # make sure -c is passed a valid integer
                 if ! [[ "$OPTARG" =~ ^[0-9]+$ ]]; then
-                    help
+                    usage
                 fi
 
                 NUM_CPUS=$OPTARG
