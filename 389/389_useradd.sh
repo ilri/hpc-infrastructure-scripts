@@ -21,7 +21,7 @@
 # https://www.redhat.com/resourcelibrary/whitepapers/netgroupwhitepaper
 
 function Usage {
-    echo "Usage: $0 -f FirstName -l LastName -u username [ -i userid -g groupid -p password]"
+    echo "Usage: $0 -f FirstName -l LastName [ -u username -i userid -g groupid -p password]"
     exit 1
 }
 
