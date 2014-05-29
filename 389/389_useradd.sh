@@ -59,7 +59,7 @@ fi
 # Print LDIF for user account
 printf "dn: uid=%s, ou=People, dc=ilri,dc=cgiar,dc=org\n" "$UserName"
 printf "changetype: add\n"
-printf "givenName: %s %s\n" "$FirstName" "$LastName"
+printf "givenName: %s\n" "$FirstName"
 printf "sn: %s\n" "$LastName"
 printf "loginShell: %s\n" "$SHELL"
 printf "gidNumber: %d\n" "$GroupID"
