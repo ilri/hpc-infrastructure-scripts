@@ -32,7 +32,7 @@ readonly DEF_JOB_NAME=interactive
 readonly PROGNAME=$(basename $0)
 readonly ARGS="$@"
 
-function help() {
+function usage() {
     echo -e "Usage: $PROGNAME [-c] [-p] \n"
     echo "Optional arguments:"
     echo -e "\t -c: number of CPU cores to request (default: $DEF_NUM_CPUS)"
@@ -62,7 +62,7 @@ function parse_options() {
                 JOB_NAME=$OPTARG
                 ;;
             \?|:)
-                help
+                usage
                 ;;
         esac
     done
