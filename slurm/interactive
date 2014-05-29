@@ -33,13 +33,15 @@ readonly PROGNAME=$(basename $0)
 readonly ARGS="$@"
 
 function usage() {
-    echo -e "Usage: $PROGNAME [-c] [-p] \n"
-    echo "Optional arguments:"
-    echo -e "\t -c: number of CPU cores to request (default: $DEF_NUM_CPUS)"
-    echo -e "\t -p: partition to run job in (default: $DEF_PARTITION)"
-    echo -e "\t -J: job name"
+    cat <<-EOF
+    Usage: $PROGNAME [-c] [-p] \n
+    echo "Optional arguments:
+        -c: number of CPU cores to request (default: $DEF_NUM_CPUS)
+        -p: partition to run job in (default: $DEF_PARTITION)
+        -J: job name
 
-    echo -e "\nWritten by: Alan Orth <a.orth@cgiar.org>"
+    Written by: Alan Orth <a.orth@cgiar.org>
+    EOF
 
     exit 0
 }
