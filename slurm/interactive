@@ -34,14 +34,15 @@ readonly ARGS="$@"
 
 function usage() {
     cat <<-EOF
-    Usage: $PROGNAME [-c] [-p]
-    echo "Optional arguments:
-        -c: number of CPU cores to request (default: $DEF_NUM_CPUS)
-        -p: partition to run job in (default: $DEF_PARTITION)
-        -J: job name
+Usage: $PROGNAME [-c] [-p] [-J]
 
-    Written by: Alan Orth <a.orth@cgiar.org>
-    EOF
+Optional arguments:
+    -c: number of CPU cores to request (default: $DEF_NUM_CPUS)
+    -p: partition to run job in (default: $DEF_PARTITION)
+    -J: job name
+
+Written by: Alan Orth <a.orth@cgiar.org>
+EOF
 
     exit 0
 }
