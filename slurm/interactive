@@ -28,9 +28,12 @@ readonly DEF_PARTITION=batch
 readonly DEF_JOB_NAME=interactive
 
 ######
- 
+
+readonly PROGNAME=$(basename $0)
+readonly ARGS="$@"
+
 function help() {
-    echo -e "Usage: `basename $0` [-c] [-p] \n"
+    echo -e "Usage: $PROGNAME [-c] [-p] \n"
     echo "Optional arguments:"
     echo -e "\t -c: number of CPU cores to request (default: $DEF_NUM_CPUS)"
     echo -e "\t -p: partition to run job in (default: $DEF_PARTITION)"
@@ -103,7 +106,7 @@ function envsetup() {
 }
 
 # pass the shell's argument array to the parsing function
-parse_options "$@"
+parse_options $ARGS
 
 # setup the defaults
 envsetup
