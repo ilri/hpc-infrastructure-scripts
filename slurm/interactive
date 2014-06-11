@@ -77,25 +77,13 @@ function envsetup() {
     readonly INTERACTIVE_SHELL=/bin/bash
 
     # default is to request 1 CPU, unless more are requested
-    if [[ $NUM_CPUS -gt $DEF_NUM_CPUS ]]; then
-        SALLOC_OPTS="-n $NUM_CPUS"
-    else
-        SALLOC_OPTS="-n $DEF_NUM_CPUS"
-    fi
+    SALLOC_OPTS="-n ${NUM_CPUS:-$DEF_NUM_CPUS}"
 
-    # check for a job name
-    if [[ -n "$JOB_NAME" ]]; then
-        SALLOC_OPTS="$SALLOC_OPTS -J $JOB_NAME"
-    else
-        SALLOC_OPTS="$SALLOC_OPTS -J $DEF_JOB_NAME"
-    fi
+    # check for a job name, otherwise use default
+    SALLOC_OPTS="$SALLOC_OPTS -J ${JOB_NAME:-$DEF_JOB_NAME}"
 
-    # see if the user specified a partition
-    if [[ -n "$PARTITION" ]]; then
-        SALLOC_OPTS="$SALLOC_OPTS -p $PARTITION"
-    else
-        SALLOC_OPTS="$SALLOC_OPTS -p $DEF_PARTITION"
-    fi
+    # see if the user specified a partition, otherwise use default
+    SALLOC_OPTS="$SALLOC_OPTS -p ${PARTITION:-$DEF_PARTITION}"
 
     # check if we want X11
     if [[ -n "$DISPLAY" ]]; then
