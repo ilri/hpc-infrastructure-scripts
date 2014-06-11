@@ -34,12 +34,13 @@ readonly ARGS="$@"
 
 function usage() {
     cat <<-EOF
-Usage: $PROGNAME [-c] [-p] [-J]
+Usage: $PROGNAME [-c] [-p] [-J] [-w]
 
 Optional arguments:
     -c: number of CPU cores to request (default: $DEF_NUM_CPUS)
     -p: partition to run job in (default: $DEF_PARTITION)
     -J: job name (default: $DEF_JOB_NAME)
+    -w: node name
 
 Written by: Alan Orth <a.orth@cgiar.org>
 EOF
@@ -48,7 +49,7 @@ EOF
 }
 
 function parse_options() {
-    while getopts ":c:p:J:" opt; do
+    while getopts ":c:p:J:w:" opt; do
         case $opt in
             c)
                 # make sure -c is passed a valid integer
@@ -63,6 +64,9 @@ function parse_options() {
                 ;;
             J)
                 JOB_NAME=$OPTARG
+                ;;
+            w)
+                NODE_NAME=$OPTARG
                 ;;
             \?|:)
                 usage
@@ -84,6 +88,11 @@ function envsetup() {
 
     # see if the user specified a partition, otherwise use default
     SALLOC_OPTS="$SALLOC_OPTS -p ${PARTITION:-$DEF_PARTITION}"
+
+    # see if the user specified a nodename
+    if [[ -n "$NODE_NAME" ]]; then
+        SALLOC_OPTS="$SALLOC_OPTS -w ${NODE_NAME} --ntasks-per-node=1"
+    fi
 
     # check if we want X11
     if [[ -n "$DISPLAY" ]]; then
