@@ -48,7 +48,7 @@ if [[ -z "$UserID" ]]; then
     UserID=$((LatestUID + 1))
 fi
 if [[ -z "$GroupID" ]]; then
-    LatestGID=`ldapsearch -x "objectclass=posixAccount" gidNumber | grep -v \^dn | grep -v \^\$ | sed -e 's/gidNumber: //g' | grep -E "^[0-9]{3,4}$" | sort -n | tail -n 1`
+    LatestGID=`ldapsearch -x "objectclass=posixGroup" gidNumber | grep -v \^dn | grep -v \^\$ | sed -e 's/gidNumber: //g' | grep -E "^[0-9]{3,4}$" | sort -n | tail -n 1`
     GroupID=$((LatestGID + 1))
 fi
 if [[ -z "$UserName" ]]; then
