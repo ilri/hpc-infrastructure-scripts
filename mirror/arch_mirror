@@ -16,6 +16,7 @@ readonly EXCLUDE="--exclude=*.db --exclude=*.db.tar.gz --exclude=*.files.tar.gz 
 readonly RSYNC_OPTIONS2="--max-delete=5000 --delay-updates --delete --delete-excluded"
 # Which rsync share to use on our upstream mirror?
 readonly RSYNC_PATH="archlinux"
+readonly RSYNC_BIN=/usr/bin/rsync
 
 # Check if destination exists
 if [[ ! -d $DESTINATION_TOP ]]; then
@@ -45,8 +46,8 @@ eexit() {
 
 # stage1 sync (packages)
 rsync_stage1() {
-    echo "Running stage1: rsync ${RSYNC_OPTIONS} ${RSYNC_OPTIONS1} ${EXCLUDE} ${NETWORK_MIRROR}::${RSYNC_PATH} ${DESTINATION_TOP}"
-    rsync \
+    echo "Running stage1: ${RSYNC_BIN} ${RSYNC_OPTIONS} ${RSYNC_OPTIONS1} ${EXCLUDE} ${NETWORK_MIRROR}::${RSYNC_PATH} ${DESTINATION_TOP}"
+    ${RSYNC_BIN} \
         ${RSYNC_OPTIONS} \
         ${RSYNC_OPTIONS1} \
         ${EXCLUDE} \
@@ -57,8 +58,8 @@ rsync_stage1() {
 }
 
 rsync_stage2() {
-    echo "Running stage2: rsync ${RSYNC_OPTIONS} ${RSYNC_OPTIONS2} ${NETWORK_MIRROR}::${RSYNC_PATH} ${DESTINATION_TOP}"
-    rsync \
+    echo "Running stage2: ${RSYNC_BIN} ${RSYNC_OPTIONS} ${RSYNC_OPTIONS2} ${NETWORK_MIRROR}::${RSYNC_PATH} ${DESTINATION_TOP}"
+    ${RSYNC_BIN} \
         ${RSYNC_OPTIONS} \
         ${RSYNC_OPTIONS2} \
         ${NETWORK_MIRROR}::${RSYNC_PATH} \
