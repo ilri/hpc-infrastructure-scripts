@@ -1,6 +1,5 @@
 #!/bin/bash
 
-MINOR_VERSIONS=(5.9 6.4 6.5 7)
 LOCK_FILE=/var/lock/subsys/centos_mirror
 NETWORK_MIRROR=mirror.nsc.liu.se
 DESTINATION_TOP=/export/data/mirror/CentOS
@@ -11,16 +10,8 @@ if [ -f $LOCK_FILE ]; then
     exit 1
 fi
 
-# sync all versions
-for version in ${MINOR_VERSIONS[@]}; do
-    if [ -d $DESTINATION_TOP/$version ] ; then
-        touch $LOCK_FILE
-        rsync -avSHP --timeout=600 --delete --delete-delay --delay-updates --exclude "local*" $NETWORK_MIRROR::CentOS/$version/ $DESTINATION_TOP/$version/
-        /bin/rm -f $LOCK_FILE
-    else
-        echo "Target directory $DESTINATION_TOP/$version not present." 1>&2
-        exit 1
-    fi
-done
+touch $LOCK_FILE
+rsync -avSHP --timeout=600 --delete --delete-delay --delay-updates --exclude "local*" $NETWORK_MIRROR::CentOS/ $DESTINATION_TOP
+/bin/rm -f $LOCK_FILE
 
 exit 0
