@@ -1,17 +1,36 @@
 #!/bin/bash
 
-LOCK_FILE=/var/lock/subsys/centos_mirror
-NETWORK_MIRROR=mirror.nsc.liu.se
-DESTINATION_TOP=/export/data/mirror/CentOS
+readonly PROGNAME=$(basename "$0")
+readonly LOCK_FILE=/var/lock/subsys/centos_mirror
+readonly LOCK_FILE_FD=200
+readonly NETWORK_MIRROR=mirror.nsc.liu.se
+readonly DESTINATION_TOP=/export/data/mirror/CentOS
 
-# check to make sure we're not already running
-if [ -f $LOCK_FILE ]; then
-    echo "CentOS mirror script already running." 1>&2
+lock() {
+    local lock_file=$LOCK_FILE
+    local lock_file_fd=$LOCK_FILE_FD
+
+    # create the lock file
+    eval "exec $lock_file_fd>$lock_file"
+
+    # acquire the lock
+    flock -n $lock_file_fd \
+        && return 0 \
+        || return 1
+}
+
+eexit() {
+    local error_str="$@"
+
+    echo $error_str
     exit 1
-fi
+}
 
-touch $LOCK_FILE
-rsync -avSHP --timeout=600 --delete --delete-delay --delay-updates --exclude "local*" $NETWORK_MIRROR::CentOS/ $DESTINATION_TOP
-/bin/rm -f $LOCK_FILE
+main() {
+    lock \
+        || eexit "Only one instance of $PROGNAME can run at one time."
 
-exit 0
+    rsync -avSHP --timeout=600 --delete --delete-delay --delay-updates --exclude "local*" $NETWORK_MIRROR::CentOS/ $DESTINATION_TOP
+}
+
+main
