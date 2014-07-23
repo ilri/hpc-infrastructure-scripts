@@ -1,11 +1,13 @@
 #!/bin/env bash
 
+readonly PROGNAME=$(basename "$0")
 readonly LOCK_FILE=/var/lock/subsys/arch_mirror
+readonly LOCK_FILE_FD=200
 readonly NETWORK_MIRROR=ftp.snt.utwente.nl
 readonly DESTINATION_TOP=/export/data/mirror/archlinux
 
 # Default options for *every* rsync call
-readonly RSYNC_OPTIONS="-prltvHSB8192 --timeout 600 --stats"
+readonly RSYNC_OPTIONS="-prltvHSB8192 --timeout 600 --stats --dry-run"
 # Options we only use in the first pass, where we do not want packages/sources to fly in yet and don't want to delete files
 readonly RSYNC_OPTIONS1=""
 # Excludes for the first pass
@@ -15,29 +17,66 @@ readonly RSYNC_OPTIONS2="--max-delete=5000 --delay-updates --delete --delete-exc
 # Which rsync share to use on our upstream mirror?
 readonly RSYNC_PATH="archlinux"
 
-# check to make sure we're not already running
-if [[ -f $LOCK_FILE ]]; then
-    echo "Arch Linux mirror script already running." 1>&2
-    exit 1
-fi
-
 # Check if destination exists
 if [[ ! -d $DESTINATION_TOP ]]; then
     echo "Target directory $DESTINATION_TOP not present." 1>&2
     exit 1
 fi
 
-## Start sync
-touch $LOCK_FILE
+lock() {
+    local lock_file=$LOCK_FILE
+    local lock_file_fd=$LOCK_FILE_FD
+
+    # create the lock file
+    eval "exec $lock_file_fd>$lock_file"
+
+    # acquire the lock
+    flock -n $lock_file_fd \
+        && return 0 \
+        || return 1
+}
+
+eexit() {
+    local error_str="$@"
+
+    echo $error_str
+    exit 1
+}
 
 # stage1 sync (packages)
-echo "Running stage1: rsync ${RSYNC_OPTIONS} ${RSYNC_OPTIONS1} ${EXCLUDE} ${NETWORK_MIRROR}::${RSYNC_PATH} ${DESTINATION_TOP}"
-rsync ${RSYNC_OPTIONS} ${RSYNC_OPTIONS1} ${EXCLUDE} ${NETWORK_MIRROR}::${RSYNC_PATH} "${DESTINATION_TOP}"
+rsync_stage1() {
+    echo "Running stage1: rsync ${RSYNC_OPTIONS} ${RSYNC_OPTIONS1} ${EXCLUDE} ${NETWORK_MIRROR}::${RSYNC_PATH} ${DESTINATION_TOP}"
+    rsync \
+        ${RSYNC_OPTIONS} \
+        ${RSYNC_OPTIONS1} \
+        ${EXCLUDE} \
+        ${NETWORK_MIRROR}::${RSYNC_PATH} \
+        "${DESTINATION_TOP}" \
+        && return 0 \
+        || return 1
+}
 
-# check if stage1 exited ok
-if [[ $? -eq 0 ]]; then
+rsync_stage2() {
     echo "Running stage2: rsync ${RSYNC_OPTIONS} ${RSYNC_OPTIONS2} ${NETWORK_MIRROR}::${RSYNC_PATH} ${DESTINATION_TOP}"
-    rsync ${RSYNC_OPTIONS} ${RSYNC_OPTIONS2} ${NETWORK_MIRROR}::${RSYNC_PATH} "${DESTINATION_TOP}"
-fi
+    rsync \
+        ${RSYNC_OPTIONS} \
+        ${RSYNC_OPTIONS2} \
+        ${NETWORK_MIRROR}::${RSYNC_PATH} \
+        "${DESTINATION_TOP}" \
+        && return 0 \
+        || return 1
+}
 
-/bin/rm -f $LOCK_FILE
+main() {
+    lock \
+        || eexit "Only one instance of $PROGNAME can run at one time."
+
+    # try stage1 sync
+    rsync_stage1 \
+        || eexit "stage 1 sync failed, will not try stage 2."
+
+    rsync_stage2 \
+        || eexit "stage 2 sync failed."
+}
+
+main
