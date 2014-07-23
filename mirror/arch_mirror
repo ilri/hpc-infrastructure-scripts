@@ -7,7 +7,7 @@ readonly NETWORK_MIRROR=ftp.snt.utwente.nl
 readonly DESTINATION_TOP=/export/data/mirror/archlinux
 
 # Default options for *every* rsync call
-readonly RSYNC_OPTIONS="-prltvHSB8192 --timeout 600 --stats --dry-run"
+readonly RSYNC_OPTIONS="-prltvHSB8192 --timeout 600 --stats"
 # Options we only use in the first pass, where we do not want packages/sources to fly in yet and don't want to delete files
 readonly RSYNC_OPTIONS1=""
 # Excludes for the first pass
