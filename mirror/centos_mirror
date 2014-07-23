@@ -5,6 +5,7 @@ readonly LOCK_FILE=/var/lock/subsys/centos_mirror
 readonly LOCK_FILE_FD=200
 readonly NETWORK_MIRROR=mirror.nsc.liu.se
 readonly DESTINATION_TOP=/export/data/mirror/CentOS
+readonly RSYNC_BIN=/usr/bin/rsync
 
 lock() {
     local lock_file=$LOCK_FILE
@@ -30,7 +31,7 @@ main() {
     lock \
         || eexit "Only one instance of $PROGNAME can run at one time."
 
-    rsync -avSHP --timeout=600 --delete --delete-delay --delay-updates --exclude "local*" $NETWORK_MIRROR::CentOS/ $DESTINATION_TOP
+    ${RSYNC_BIN} -avSHP --timeout=600 --delete --delete-delay --delay-updates --exclude "local*" $NETWORK_MIRROR::CentOS/ $DESTINATION_TOP
 }
 
 main
