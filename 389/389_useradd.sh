@@ -25,7 +25,10 @@ readonly PROGDIR=$(readlink -m $(dirname $0))
 readonly ARGS="$@"
 
 function usage {
-    echo "Usage: $PROGNAME -f FirstName -l LastName [ -u username -i userid -g groupid -p password]"
+    cat <<- EOF
+Usage: $PROGNAME -f FirstName -l LastName [ -u username -i userid -g groupid -p password]
+EOF
+
     exit 1
 }
 
