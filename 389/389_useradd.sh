@@ -37,6 +37,14 @@ Optional arguments:
     -i: numeric userid (default: latest available)
     -g: numeric groupid (default: latest available)
     -p: password (default: $DEF_PASSWORD)
+
+Import to 389 with the LDAP Directory Admin:
+
+    ldapmodify -a -D "cn=Directory Manager" -W -p 389 -h localhost -f /tmp/blah.ldif
+
+or, safer, a dedicated admin user:
+
+    ldapmodify -a -D "uid=user,ou=administrators,ou=topologymanagement,o=netscaperoot" -W -p 389 -h localhost -f /tmp/blah.ldif
 EOF
 
     exit 0
