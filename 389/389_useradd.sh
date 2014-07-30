@@ -20,8 +20,12 @@
 # Portions Copyright (C) 2008 Red Hat Inc., Durham, North Carolina.
 # https://www.redhat.com/resourcelibrary/whitepapers/netgroupwhitepaper
 
+readonly PROGNAME=$(basename $0)
+readonly PROGDIR=$(readlink -m $(dirname $0))
+readonly ARGS="$@"
+
 function usage {
-    echo "Usage: $0 -f FirstName -l LastName [ -u username -i userid -g groupid -p password]"
+    echo "Usage: $PROGNAME -f FirstName -l LastName [ -u username -i userid -g groupid -p password]"
     exit 1
 }
 
