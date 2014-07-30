@@ -27,6 +27,12 @@ readonly ARGS="$@"
 function usage {
     cat <<- EOF
 Usage: $PROGNAME -f FirstName -l LastName [ -u username -i userid -g groupid -p password]
+
+Optional arguments:
+    -u: username
+    -i: numeric userid (default: latest available)
+    -g: numeric groupid (default: latest available)
+    -p: password (default: $Password)
 EOF
 
     exit 1
