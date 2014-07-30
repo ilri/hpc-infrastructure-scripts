@@ -63,16 +63,16 @@ function generate_ldif {
     [[ -z "$FIRSTNAME" ]] && usage
     [[ -z "$LASTNAME" ]] && usage
     if [[ -z "$USERID" ]]; then
-        LATESTUID=`ldapsearch -x "objectclass=posixAccount" uidNumber | grep -v \^dn | grep -v \^\$ | sed -e 's/uidNumber: //g' | grep -E "^[0-9]{3,4}$" | sort -n | tail -n 1`
-        USERID=$((LATESTUID + 1))
+        local latestuid=`ldapsearch -x "objectclass=posixAccount" uidNumber | grep -v \^dn | grep -v \^\$ | sed -e 's/uidNumber: //g' | grep -E "^[0-9]{3,4}$" | sort -n | tail -n 1`
+        USERID=$((latestuid + 1))
     fi
     if [[ -z "$GROUPID" ]]; then
-        LATESTGID=`ldapsearch -x "objectclass=posixGroup" gidNumber | grep -v \^dn | grep -v \^\$ | sed -e 's/gidNumber: //g' | grep -E "^[0-9]{3,4}$" | sort -n | tail -n 1`
-        GROUPID=$((LATESTGID + 1))
+        local latestgid=`ldapsearch -x "objectclass=posixGroup" gidNumber | grep -v \^dn | grep -v \^\$ | sed -e 's/gidNumber: //g' | grep -E "^[0-9]{3,4}$" | sort -n | tail -n 1`
+        GROUPID=$((latestgid + 1))
     fi
     if [[ -z "$USERNAME" ]]; then
-        FIRSTINITIAL=`echo $FIRSTNAME | cut -c1`
-        USERNAME=`echo "${FIRSTINITIAL}${LASTNAME}" | tr "[:upper:]" "[:lower:]"`
+        local firstinitial=`echo $FIRSTNAME | cut -c1`
+        USERNAME=`echo "${firstinitial}${LASTNAME}" | tr "[:upper:]" "[:lower:]"`
     fi
 
     local username=$USERNAME
