@@ -20,7 +20,7 @@
 # Portions Copyright (C) 2008 Red Hat Inc., Durham, North Carolina.
 # https://www.redhat.com/resourcelibrary/whitepapers/netgroupwhitepaper
 
-function Usage {
+function usage {
     echo "Usage: $0 -f FirstName -l LastName [ -u username -i userid -g groupid -p password]"
     exit 1
 }
@@ -37,12 +37,12 @@ do
         l) LastName=$OPTARG;;
         p) Password=$OPTARG;;
         u) UserName=$OPTARG;;
-        h) Usage;;
+        h) usage;;
     esac
 done
 
-[[ -z "$FirstName" ]] && Usage
-[[ -z "$LastName" ]] && Usage
+[[ -z "$FirstName" ]] && usage
+[[ -z "$LastName" ]] && usage
 if [[ -z "$UserID" ]]; then
     LatestUID=`ldapsearch -x "objectclass=posixAccount" uidNumber | grep -v \^dn | grep -v \^\$ | sed -e 's/uidNumber: //g' | grep -E "^[0-9]{3,4}$" | sort -n | tail -n 1`
     UserID=$((LatestUID + 1))
