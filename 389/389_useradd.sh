@@ -35,7 +35,7 @@ Optional arguments:
     -p: password (default: $Password)
 EOF
 
-    exit 1
+    exit 0
 }
 
 SHELL=/bin/bash
