@@ -46,12 +46,12 @@ function parse_arguments {
     while getopts f:g:i:l:i:p:u:h OPTION
     do
         case $OPTION in
-            f) FirstName=$OPTARG;;
-            g) GroupID=$OPTARG;;
-            i) UserID=$OPTARG;;
-            l) LastName=$OPTARG;;
-            p) Password=$OPTARG;;
-            u) UserName=$OPTARG;;
+            f) FIRSTNAME=$OPTARG;;
+            g) GROUPID=$OPTARG;;
+            i) USERID=$OPTARG;;
+            l) LASTNAME=$OPTARG;;
+            p) PASSWORD=$OPTARG;;
+            u) USERNAME=$OPTARG;;
             h) usage;;
         esac
     done
@@ -60,28 +60,28 @@ function parse_arguments {
 function generate_ldif {
 
     # check existence and validity of parameters
-    [[ -z "$FirstName" ]] && usage
-    [[ -z "$LastName" ]] && usage
-    if [[ -z "$UserID" ]]; then
-        LatestUID=`ldapsearch -x "objectclass=posixAccount" uidNumber | grep -v \^dn | grep -v \^\$ | sed -e 's/uidNumber: //g' | grep -E "^[0-9]{3,4}$" | sort -n | tail -n 1`
-        UserID=$((LatestUID + 1))
+    [[ -z "$FIRSTNAME" ]] && usage
+    [[ -z "$LASTNAME" ]] && usage
+    if [[ -z "$USERID" ]]; then
+        LATESTUID=`ldapsearch -x "objectclass=posixAccount" uidNumber | grep -v \^dn | grep -v \^\$ | sed -e 's/uidNumber: //g' | grep -E "^[0-9]{3,4}$" | sort -n | tail -n 1`
+        USERID=$((LATESTUID + 1))
     fi
-    if [[ -z "$GroupID" ]]; then
-        LatestGID=`ldapsearch -x "objectclass=posixGroup" gidNumber | grep -v \^dn | grep -v \^\$ | sed -e 's/gidNumber: //g' | grep -E "^[0-9]{3,4}$" | sort -n | tail -n 1`
-        GroupID=$((LatestGID + 1))
+    if [[ -z "$GROUPID" ]]; then
+        LATESTGID=`ldapsearch -x "objectclass=posixGroup" gidNumber | grep -v \^dn | grep -v \^\$ | sed -e 's/gidNumber: //g' | grep -E "^[0-9]{3,4}$" | sort -n | tail -n 1`
+        GROUPID=$((LATESTGID + 1))
     fi
-    if [[ -z "$UserName" ]]; then
-        FirstInitial=`echo $FirstName | cut -c1`
-        UserName=`echo "${FirstInitial}${LastName}" | tr "[:upper:]" "[:lower:]"`
+    if [[ -z "$USERNAME" ]]; then
+        FIRSTINITIAL=`echo $FIRSTNAME | cut -c1`
+        USERNAME=`echo "${FIRSTINITIAL}${LASTNAME}" | tr "[:upper:]" "[:lower:]"`
     fi
 
-    local username=$UserName
-    local firstname=$FirstName
-    local lastname=$LastName
+    local username=$USERNAME
+    local firstname=$FIRSTNAME
+    local lastname=$LASTNAME
     local shell=$SHELL
-    local groupid=$GroupID
-    local userid=$UserID
-    local password=${Password:-$DEF_PASSWORD}
+    local groupid=$GROUPID
+    local userid=$USERID
+    local password=${PASSWORD:-$DEF_PASSWORD}
 
     # Print LDIF for user account
     printf "dn: uid=%s, ou=People, dc=ilri,dc=cgiar,dc=org\n" "$username"
