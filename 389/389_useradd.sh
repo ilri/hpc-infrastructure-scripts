@@ -24,6 +24,7 @@ readonly PROGNAME=$(basename $0)
 readonly PROGDIR=$(readlink -m $(dirname $0))
 readonly ARGS="$@"
 
+# some defaults
 readonly DEF_SHELL=/bin/bash
 readonly DEF_PASSWORD=redhat
 
