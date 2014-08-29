@@ -42,6 +42,8 @@ Optional arguments:
     -J: job name (default: $DEF_JOB_NAME)
     -w: node name
 
+NB: interactive jobs have a time limit of 8 hours.
+
 Written by: Alan Orth <a.orth@cgiar.org>
 EOF
 
@@ -88,6 +90,9 @@ function envsetup() {
 
     # see if the user specified a partition, otherwise use default
     SALLOC_OPTS="$SALLOC_OPTS -p ${PARTITION:-$DEF_PARTITION}"
+
+    # default time for interactive jobs is 8 hours, ~1 working day
+    SALLOC_OPTS="$SALLOC_OPTS -t 8:00:00"
 
     # see if the user specified a nodename
     if [[ -n "$NODE_NAME" ]]; then
