@@ -94,9 +94,9 @@ function envsetup() {
     # default time for interactive jobs is 8 hours, ~1 working day
     SALLOC_OPTS="$SALLOC_OPTS -t 8:00:00"
 
-    # see if the user specified a nodename
-    if [[ -n "$NODE_NAME" ]]; then
-        SALLOC_OPTS="$SALLOC_OPTS -w ${NODE_NAME} --ntasks-per-node=1"
+    # if user specifies no of cpus & node name, run all the tasks in the specified node
+    if [[ -n "$NODE_NAME" && -n $NUM_CPUS ]]; then
+        SALLOC_OPTS="$SALLOC_OPTS -w ${NODE_NAME} --ntasks-per-node=$NUM_CPUS"
     fi
 
     # check if we want X11
