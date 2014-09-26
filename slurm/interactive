@@ -82,8 +82,14 @@ function envsetup() {
     readonly SRUN_BIN=/usr/bin/srun
     readonly INTERACTIVE_SHELL=/bin/bash
 
-    # default is to request 1 CPU, unless more are requested
-    SALLOC_OPTS="-n ${NUM_CPUS:-$DEF_NUM_CPUS}"
+    # check to see if user requested a specific number of CPUs
+    # ... otherwise use the default
+    if [[ -z $NUM_CPUS ]]; then
+        NUM_CPUS=$DEF_NUM_CPUS
+    fi
+
+    # set the CPU allocation
+    SALLOC_OPTS="-n $NUM_CPUS"
 
     # check for a job name, otherwise use default
     SALLOC_OPTS="$SALLOC_OPTS -J ${JOB_NAME:-$DEF_JOB_NAME}"
@@ -94,8 +100,8 @@ function envsetup() {
     # default time for interactive jobs is 8 hours, ~1 working day
     SALLOC_OPTS="$SALLOC_OPTS -t 8:00:00"
 
-    # if user specifies no of cpus & node name, run all the tasks in the specified node
-    if [[ -n "$NODE_NAME" && -n $NUM_CPUS ]]; then
+    # if user specifies a node name, run all the tasks in the specified node
+    if [[ -n "$NODE_NAME" ]]; then
         SALLOC_OPTS="$SALLOC_OPTS -w ${NODE_NAME} --ntasks-per-node=$NUM_CPUS"
     fi
 
