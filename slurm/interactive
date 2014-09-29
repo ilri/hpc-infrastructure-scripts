@@ -81,6 +81,8 @@ function envsetup() {
     readonly SALLOC_BIN=/usr/bin/salloc
     readonly SRUN_BIN=/usr/bin/srun
     readonly INTERACTIVE_SHELL=/bin/bash
+    # force environment to be proper login shells
+    readonly INTERACTIVE_SHELL_OPTS="-l "
 
     # check to see if user requested a specific number of CPUs
     # ... otherwise use the default
@@ -119,4 +121,4 @@ parse_options $ARGS
 # setup the defaults
 envsetup
 
-$SALLOC_BIN $SALLOC_OPTS $SRUN_BIN $SRUN_OPTS $INTERACTIVE_SHELL
+$SALLOC_BIN $SALLOC_OPTS $SRUN_BIN $SRUN_OPTS $INTERACTIVE_SHELL $INTERACTIVE_SHELL_OPTS
