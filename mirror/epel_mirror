@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MINOR_VERSIONS=(6)
+MINOR_VERSIONS=(6 7)
 LOCK_FILE=/var/lock/subsys/epel_mirror
 NETWORK_MIRROR=mirror.nsc.liu.se
 DESTINATION_TOP=/export/data/mirror/EPEL
