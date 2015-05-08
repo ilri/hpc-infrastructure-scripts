@@ -1,4 +1,4 @@
-# Scripts for ILRI's HPC infrastructure
+## ILRI HPC Infrastructure Scripts
 
 This repo contains various scripts used in
 [ILRI's research computing](http://hpc.ilri.cgiar.org/) infrastructure.
