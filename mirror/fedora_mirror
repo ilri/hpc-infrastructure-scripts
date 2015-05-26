@@ -68,6 +68,9 @@ linux/releases/20/Images/armhfp
 linux/releases/21/*/armhfp
 linux/releases/21/Everything/*/debug
 linux/releases/21/*/source
+linux/releases/22/*/armhfp
+linux/releases/22/Everything/*/debug
+linux/releases/22/*/source
 linux/releases/test
 LIST
 
