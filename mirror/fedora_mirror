@@ -65,6 +65,9 @@ linux/releases/20/Everything/source
 linux/releases/20/Fedora/armhfp
 linux/releases/20/Fedora/source
 linux/releases/20/Images/armhfp
+linux/releases/21/*/armhfp
+linux/releases/21/Everything/*/debug
+linux/releases/21/*/source
 linux/releases/test
 LIST
 
