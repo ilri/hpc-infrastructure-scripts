@@ -30,13 +30,14 @@ readonly DEF_PASSWORD=redhat
 
 function usage {
     cat <<- EOF
-Usage: $PROGNAME -f FirstName -l LastName [ -u username -i userid -g groupid -p password]
+Usage: $PROGNAME -f FirstName -l LastName [ -u username -i userid -g groupid -p password -e email]
 
 Optional arguments:
     -u: username
     -i: numeric userid (default: latest available)
     -g: numeric groupid (default: latest available)
     -p: password (default: $DEF_PASSWORD)
+    -e: user email address
 
 Import to 389 with the LDAP Directory Admin:
 
@@ -44,14 +45,14 @@ Import to 389 with the LDAP Directory Admin:
 
 or, safer, a dedicated admin user:
 
-    ldapmodify -a -D "uid=user,ou=administrators,ou=topologymanagement,o=netscaperoot" -W -p 389 -h localhost -f /tmp/blah.ldif
+    ldapmodify -a -D "uid=user,ou=administrators,ou=topologymanagement,o=netscaperoot" -W -p 389 -h localhost -e johndoe@gmail.com -f /tmp/blah.ldif
 EOF
 
     exit 0
 }
 
 function parse_arguments {
-    while getopts f:g:i:l:i:p:u:h OPTION
+    while getopts f:g:i:l:i:p:u:e:h OPTION
     do
         case $OPTION in
             f) FIRSTNAME=$OPTARG;;
@@ -60,6 +61,7 @@ function parse_arguments {
             l) LASTNAME=$OPTARG;;
             p) PASSWORD=$OPTARG;;
             u) USERNAME=$OPTARG;;
+            e) EMAIL=$OPTARG;;
             h) usage;;
         esac
     done
@@ -110,7 +112,8 @@ function generate_ldif {
     # send password in clear text, so 389 can hash using the best scheme
     # see: https://lists.fedoraproject.org/pipermail/389-users/2012-August/014908.html
     printf "userPassword: %s\n" "$password"
-    printf "homeDirectory: /home/%s\n\n" "$username"
+    printf "homeDirectory: /home/%s\n" "$username"
+    [[ ! -z "$EMAIL" ]] && printf "mail: %s\n\n" "$EMAIL"
 
     # Print LDIF for primary group
     printf "dn: cn=%s, ou=Groups, dc=ilri,dc=cgiar,dc=org\n" "$username"
