@@ -21,7 +21,6 @@
 # https://www.redhat.com/resourcelibrary/whitepapers/netgroupwhitepaper
 
 readonly PROGNAME=$(basename $0)
-readonly ARGS="$@"
 
 # some defaults
 readonly DEF_SHELL=/bin/bash
@@ -50,21 +49,19 @@ EOF
     exit 0
 }
 
-function parse_arguments {
-    while getopts e:f:g:i:l:p:u:h OPTION
-    do
-        case $OPTION in
-            e) EMAIL=$OPTARG;;
-            f) FIRSTNAME=$OPTARG;;
-            g) GROUPID=$OPTARG;;
-            i) USERID=$OPTARG;;
-            l) LASTNAME="$OPTARG";;
-            p) PASSWORD=$OPTARG;;
-            u) USERNAME=$OPTARG;;
-            h) usage;;
-        esac
-    done
-}
+while getopts e:f:g:i:l:p:u:h OPTION
+do
+    case $OPTION in
+        e) EMAIL=$OPTARG;;
+        f) FIRSTNAME=$OPTARG;;
+        g) GROUPID=$OPTARG;;
+        i) USERID=$OPTARG;;
+        l) LASTNAME="$OPTARG";;
+        p) PASSWORD=$OPTARG;;
+        u) USERNAME=$OPTARG;;
+        h) usage;;
+    esac
+done
 
 function generate_ldif {
 
@@ -131,9 +128,4 @@ function generate_ldif {
     printf 'memberuid: %s\n' "$username"
 }
 
-function main {
-    parse_arguments $ARGS
-    generate_ldif
-}
-
-main
+generate_ldif
