@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (C) 2014 Alan Orth
+# Copyright (C) 2014–present Alan Orth
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -58,7 +58,7 @@ function parse_arguments {
             f) FIRSTNAME=$OPTARG;;
             g) GROUPID=$OPTARG;;
             i) USERID=$OPTARG;;
-            l) LASTNAME=$OPTARG;;
+            l) LASTNAME="$OPTARG";;
             p) PASSWORD=$OPTARG;;
             u) USERNAME=$OPTARG;;
             h) usage;;
