@@ -33,11 +33,11 @@ function usage {
 Usage: $PROGNAME -f FirstName -l LastName [ -u username -i userid -g groupid -p password -e email]
 
 Optional arguments:
-    -u: username
-    -i: numeric userid (default: latest available)
-    -g: numeric groupid (default: latest available)
-    -p: password (default: $DEF_PASSWORD)
     -e: user email address
+    -g: numeric groupid (default: latest available)
+    -i: numeric userid (default: latest available)
+    -p: password (default: $DEF_PASSWORD)
+    -u: username
 
 Import to 389 with the LDAP Directory Admin:
 
@@ -52,16 +52,16 @@ EOF
 }
 
 function parse_arguments {
-    while getopts f:g:i:l:p:u:e:h OPTION
+    while getopts e:f:g:i:l:p:u:h OPTION
     do
         case $OPTION in
+            e) EMAIL=$OPTARG;;
             f) FIRSTNAME=$OPTARG;;
             g) GROUPID=$OPTARG;;
             i) USERID=$OPTARG;;
             l) LASTNAME=$OPTARG;;
             p) PASSWORD=$OPTARG;;
             u) USERNAME=$OPTARG;;
-            e) EMAIL=$OPTARG;;
             h) usage;;
         esac
     done
