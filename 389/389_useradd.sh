@@ -84,7 +84,7 @@ printf 'dn: uid=%s, ou=People, dc=ilri,dc=cgiar,dc=org\n' "$USERNAME"
 printf 'changetype: add\n'
 printf 'givenName: %s\n' "$FIRSTNAME"
 printf 'sn: %s\n' "$LASTNAME"
-printf 'loginShell: %s\n' "$SHELL"
+printf 'loginShell: %s\n' "$DEF_SHELL"
 printf 'gidNumber: %d\n' "$GROUPID"
 printf 'uidNumber: %d\n' "$USERID"
 printf 'objectClass: top\n'
