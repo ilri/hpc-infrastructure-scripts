@@ -45,7 +45,7 @@ Import to 389 with the LDAP Directory Admin:
 
 or, safer, a dedicated admin user:
 
-    ldapmodify -a -D "uid=user,ou=administrators,ou=topologymanagement,o=netscaperoot" -W -p 389 -h localhost -e johndoe@gmail.com -f /tmp/blah.ldif
+    ldapmodify -a -D "uid=user,ou=administrators,ou=topologymanagement,o=netscaperoot" -W -p 389 -h localhost -f /tmp/blah.ldif
 EOF
 
     exit 0
