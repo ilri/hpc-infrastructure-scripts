@@ -52,7 +52,7 @@ EOF
 }
 
 function parse_arguments {
-    while getopts f:g:i:l:i:p:u:e:h OPTION
+    while getopts f:g:i:l:p:u:e:h OPTION
     do
         case $OPTION in
             f) FIRSTNAME=$OPTARG;;
