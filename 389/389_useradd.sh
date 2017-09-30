@@ -63,69 +63,56 @@ do
     esac
 done
 
-function generate_ldif {
+# check existence and validity of parameters
+[[ -z "$FIRSTNAME" ]] && usage
+[[ -z "$LASTNAME" ]] && usage
+if [[ -z "$USERID" ]]; then
+    local latestuid=$(ldapsearch -x 'objectclass=posixAccount' uidNumber | grep -v \^dn | grep -v \^\$ | sed -e 's/uidNumber: //g' | grep -E '^[0-9]{3,4}$' | sort -n | tail -n 1)
+    USERID=$((latestuid + 1))
+fi
+if [[ -z "$GROUPID" ]]; then
+    local latestgid=$(ldapsearch -x 'objectclass=posixGroup' gidNumber | grep -v \^dn | grep -v \^\$ | sed -e 's/gidNumber: //g' | grep -E '^[0-9]{3,4}$' | sort -n | tail -n 1)
+    GROUPID=$((latestgid + 1))
+fi
+if [[ -z "$USERNAME" ]]; then
+    local firstinitial=$(echo $FIRSTNAME | cut -c1)
+    USERNAME=$(echo "${firstinitial}${LASTNAME}" | tr '[:upper:]' '[:lower:]')
+fi
 
-    # check existence and validity of parameters
-    [[ -z "$FIRSTNAME" ]] && usage
-    [[ -z "$LASTNAME" ]] && usage
-    if [[ -z "$USERID" ]]; then
-        local latestuid=$(ldapsearch -x 'objectclass=posixAccount' uidNumber | grep -v \^dn | grep -v \^\$ | sed -e 's/uidNumber: //g' | grep -E '^[0-9]{3,4}$' | sort -n | tail -n 1)
-        USERID=$((latestuid + 1))
-    fi
-    if [[ -z "$GROUPID" ]]; then
-        local latestgid=$(ldapsearch -x 'objectclass=posixGroup' gidNumber | grep -v \^dn | grep -v \^\$ | sed -e 's/gidNumber: //g' | grep -E '^[0-9]{3,4}$' | sort -n | tail -n 1)
-        GROUPID=$((latestgid + 1))
-    fi
-    if [[ -z "$USERNAME" ]]; then
-        local firstinitial=$(echo $FIRSTNAME | cut -c1)
-        USERNAME=$(echo "${firstinitial}${LASTNAME}" | tr '[:upper:]' '[:lower:]')
-    fi
+# Print LDIF for user account
+printf 'dn: uid=%s, ou=People, dc=ilri,dc=cgiar,dc=org\n' "$USERNAME"
+printf 'changetype: add\n'
+printf 'givenName: %s\n' "$FIRSTNAME"
+printf 'sn: %s\n' "$LASTNAME"
+printf 'loginShell: %s\n' "$SHELL"
+printf 'gidNumber: %d\n' "$GROUPID"
+printf 'uidNumber: %d\n' "$USERID"
+printf 'objectClass: top\n'
+printf 'objectClass: person\n'
+printf 'objectClass: organizationalPerson\n'
+printf 'objectClass: inetorgperson\n'
+printf 'objectClass: posixAccount\n'
+printf 'uid: %s\n' "$USERNAME"
+printf 'gecos: %s %s\n' "$FIRSTNAME" "$LASTNAME"
+printf 'cn: %s %s\n' "$FIRSTNAME" "$LASTNAME"
+# send password in clear text, so 389 can hash using the best scheme
+# see: https://lists.fedoraproject.org/pipermail/389-users/2012-August/014908.html
+printf 'userPassword: %s\n' "${PASSWORD:-$DEF_PASSWORD}"
+printf 'homeDirectory: /home/%s\n' "$USERNAME"
+[[ ! -z "$EMAIL" ]] && printf 'mail: %s\n\n' "$EMAIL"
 
-    local username=$USERNAME
-    local firstname=$FIRSTNAME
-    local lastname=$LASTNAME
-    local shell=$SHELL
-    local groupid=$GROUPID
-    local userid=$USERID
-    local password=${PASSWORD:-$DEF_PASSWORD}
+# Print LDIF for primary group
+printf 'dn: cn=%s, ou=Groups, dc=ilri,dc=cgiar,dc=org\n' "$USERNAME"
+printf 'changetype: add\n'
+printf 'gidNumber: %d\n' "$GROUPID"
+printf 'memberUid: %s\n' "$USERNAME"
+printf 'objectClass: top\n'
+printf 'objectClass: groupofuniquenames\n'
+printf 'objectClass: posixgroup\n'
+printf 'cn: %s\n\n' "$USERNAME"
 
-    # Print LDIF for user account
-    printf 'dn: uid=%s, ou=People, dc=ilri,dc=cgiar,dc=org\n' "$username"
-    printf 'changetype: add\n'
-    printf 'givenName: %s\n' "$firstname"
-    printf 'sn: %s\n' "$lastname"
-    printf 'loginShell: %s\n' "$shell"
-    printf 'gidNumber: %d\n' "$groupid"
-    printf 'uidNumber: %d\n' "$userid"
-    printf 'objectClass: top\n'
-    printf 'objectClass: person\n'
-    printf 'objectClass: organizationalPerson\n'
-    printf 'objectClass: inetorgperson\n'
-    printf 'objectClass: posixAccount\n'
-    printf 'uid: %s\n' "$username"
-    printf 'gecos: %s %s\n' "$firstname" "$lastname"
-    printf 'cn: %s %s\n' "$firstname" "$lastname"
-    # send password in clear text, so 389 can hash using the best scheme
-    # see: https://lists.fedoraproject.org/pipermail/389-users/2012-August/014908.html
-    printf 'userPassword: %s\n' "$password"
-    printf 'homeDirectory: /home/%s\n' "$username"
-    [[ ! -z "$EMAIL" ]] && printf 'mail: %s\n\n' "$EMAIL"
-
-    # Print LDIF for primary group
-    printf 'dn: cn=%s, ou=Groups, dc=ilri,dc=cgiar,dc=org\n' "$username"
-    printf 'changetype: add\n'
-    printf 'gidNumber: %d\n' "$groupid"
-    printf 'memberUid: %s\n' "$username"
-    printf 'objectClass: top\n'
-    printf 'objectClass: groupofuniquenames\n'
-    printf 'objectClass: posixgroup\n'
-    printf 'cn: %s\n\n' "$username"
-
-    # add user to SSH group
-    printf 'dn: cn=ssh, ou=Groups, dc=ilri,dc=cgiar,dc=org\n'
-    printf 'changetype: modify\n'
-    printf 'add: memberuid\n'
-    printf 'memberuid: %s\n' "$username"
-}
-
-generate_ldif
+# add user to SSH group
+printf 'dn: cn=ssh, ou=Groups, dc=ilri,dc=cgiar,dc=org\n'
+printf 'changetype: modify\n'
+printf 'add: memberuid\n'
+printf 'memberuid: %s\n' "$USERNAME"
