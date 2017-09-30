@@ -21,7 +21,6 @@
 # https://www.redhat.com/resourcelibrary/whitepapers/netgroupwhitepaper
 
 readonly PROGNAME=$(basename $0)
-readonly PROGDIR=$(readlink -m $(dirname $0))
 readonly ARGS="$@"
 
 # some defaults
