@@ -2,7 +2,7 @@
 
 MINOR_VERSIONS=(6 7)
 LOCK_FILE=/var/lock/subsys/epel_mirror
-NETWORK_MIRROR=mirror.nsc.liu.se
+NETWORK_MIRROR=mirror.liquidtelecom.com
 DESTINATION_TOP=/export/data/mirror/EPEL
 
 # check to make sure we're not already running
