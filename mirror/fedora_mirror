@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 LOCK_FILE=/var/lock/subsys/fedora_mirror
-NETWORK_MIRROR=mirror.itc.virginia.edu
+NETWORK_MIRROR=mirror.liquidtelecom.com
 DESTINATION_TOP=/export/data/mirror/fedora
 BACKUP_LIST_FILE=`mktemp`
 

@@ -3,7 +3,7 @@
 readonly PROGNAME=$(basename "$0")
 readonly LOCK_FILE=/var/lock/subsys/centos_mirror
 readonly LOCK_FILE_FD=200
-readonly NETWORK_MIRROR=mirror.nsc.liu.se
+readonly NETWORK_MIRROR=mirror.liquidtelecom.com
 readonly DESTINATION_TOP=/export/data/mirror/CentOS
 readonly RSYNC_BIN=/usr/bin/rsync
 
