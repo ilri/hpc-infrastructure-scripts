@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 LOCK_FILE=/var/lock/subsys/fedora_mirror
 NETWORK_MIRROR=mirror.itc.virginia.edu

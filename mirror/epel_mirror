@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 MINOR_VERSIONS=(6 7)
 LOCK_FILE=/var/lock/subsys/epel_mirror

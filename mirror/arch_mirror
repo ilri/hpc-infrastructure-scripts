@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 
 readonly PROGNAME=$(basename "$0")
 readonly LOCK_FILE=/var/lock/subsys/arch_mirror
