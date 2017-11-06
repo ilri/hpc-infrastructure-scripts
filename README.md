@@ -1,17 +1,14 @@
-## ILRI HPC Infrastructure Scripts
-
-This repo contains various scripts used in
-[ILRI's research computing](http://hpc.ilri.cgiar.org/) infrastructure.
+# ILRI HPC Infrastructure Scripts
+This repository contains various scripts used in [ILRI's research computing](http://hpc.ilri.cgiar.org/) infrastructure. 
 
 These scripts automate various tasks such as:
-- Mirroring CentOS, Arch Linux & EPEL upstream repos for local use
-within our research computing infrastructure.
-- Backing up 389 LDAP server, MySQL & PostgreSQL DBMS, linux partitions, e.t.c.
-- Creating interactive shells on compute nodes using slurm allocation - salloc.
-- Adding new and or accessing users details on 389 LDAP server.
+- Mirroring CentOS, Arch Linux, EPEL repositories for local use within our research computing infrastructure
+- Backing up 389 LDAP server, MySQL, PostgreSQL, etc
+- Creating interactive shells on compute nodes using SLURM allocation
+- Adding new and or accessing users details on 389 LDAP server
 
-### License
-Copyright (C) 2015 International Livestock Research Institute (ILRI)
+## License
+Copyright (C) 2017 International Livestock Research Institute (ILRI)
 
 The contents of this repository are free software: you can redistribute
 it and/or modify it under the terms of the GNU General Public License
