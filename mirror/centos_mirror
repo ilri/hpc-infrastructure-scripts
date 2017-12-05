@@ -31,7 +31,7 @@ main() {
     lock \
         || eexit "Only one instance of $PROGNAME can run at one time."
 
-    ${RSYNC_BIN} -avSHP --timeout=600 --delete --delete-delay --delay-updates --exclude "local*" $NETWORK_MIRROR::CentOS/ $DESTINATION_TOP
+    ${RSYNC_BIN} -avSHP --timeout=600 --delete --delete-delay --delay-updates --exclude "local*" $NETWORK_MIRROR::centos/ $DESTINATION_TOP
 }
 
 main
