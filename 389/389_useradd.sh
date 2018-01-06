@@ -99,9 +99,10 @@ printf 'cn: %s %s\n' "$FIRSTNAME" "$LASTNAME"
 # see: https://lists.fedoraproject.org/pipermail/389-users/2012-August/014908.html
 printf 'userPassword: %s\n' "${PASSWORD:-$DEF_PASSWORD}"
 printf 'homeDirectory: /home/%s\n' "$USERNAME"
-[[ ! -z "$EMAIL" ]] && printf 'mail: %s\n\n' "$EMAIL"
+[[ ! -z "$EMAIL" ]] && printf 'mail: %s\n' "$EMAIL"
 
 # Print LDIF for primary group
+printf '\n'
 printf 'dn: cn=%s, ou=Groups, dc=ilri,dc=cgiar,dc=org\n' "$USERNAME"
 printf 'changetype: add\n'
 printf 'gidNumber: %d\n' "$GROUPID"
