@@ -1,5 +1,5 @@
 # ILRI HPC Infrastructure Scripts
-This repository contains various scripts used in [ILRI's research computing](http://hpc.ilri.cgiar.org/) infrastructure. 
+This repository contains various scripts used in [ILRI's research computing](https://hpc.ilri.cgiar.org/) infrastructure.
 
 These scripts automate various tasks such as:
 - Mirroring CentOS, Arch Linux, EPEL repositories for local use within our research computing infrastructure
