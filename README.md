@@ -8,7 +8,7 @@ These scripts automate various tasks such as:
 - Adding new and or accessing users details on 389 LDAP server
 
 ## License
-Copyright (C) 2017 International Livestock Research Institute (ILRI)
+Copyright (C) 2013-2018 International Livestock Research Institute (ILRI)
 
 The contents of this repository are free software: you can redistribute
 it and/or modify it under the terms of the GNU General Public License
