@@ -109,10 +109,11 @@ function envsetup() {
 
     # check if we want X11
     if [[ -n "$DISPLAY" ]]; then
-        SRUN_OPTS="--x11 --pty"
-    else
-        SRUN_OPTS="--pty"
+        SALLOC_OPTS="$SALLOC_OPTS --x11"
     fi
+
+    # attach a terminal for interactive use
+    SRUN_OPTS="--pty"
 }
 
 # pass the shell's argument array to the parsing function
