@@ -6,14 +6,14 @@ NETWORK_MIRROR=mirror.liquidtelecom.com
 DESTINATION_TOP=/export/data/mirror/EPEL
 
 # check to make sure we're not already running
-if [ -f $LOCK_FILE ]; then
+if [[ -f $LOCK_FILE ]]; then
     echo "EPEL mirror script already running." 1>&2
     exit 1
 fi
 
 # sync all versions
 for version in ${VERSIONS[@]}; do
-    if [ -d $DESTINATION_TOP/$version ] ; then
+    if [[ -d $DESTINATION_TOP/$version ]]; then
         touch $LOCK_FILE
         rsync -avSHP --timeout=600 --delete --delete-excluded --delete-delay --delay-updates --exclude "ppc64" --exclude "aarch64" --exclude "ppc64le" $NETWORK_MIRROR::fedora-epel/$version/ $DESTINATION_TOP/$version/
         /bin/rm -f $LOCK_FILE
