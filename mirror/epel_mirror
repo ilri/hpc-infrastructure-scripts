@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-MINOR_VERSIONS=(6 7 8)
+VERSIONS=(6 7 8)
 LOCK_FILE=/var/lock/subsys/epel_mirror
 NETWORK_MIRROR=mirror.liquidtelecom.com
 DESTINATION_TOP=/export/data/mirror/EPEL
@@ -12,7 +12,7 @@ if [ -f $LOCK_FILE ]; then
 fi
 
 # sync all versions
-for version in ${MINOR_VERSIONS[@]}; do
+for version in ${VERSIONS[@]}; do
     if [ -d $DESTINATION_TOP/$version ] ; then
         touch $LOCK_FILE
         rsync -avSHP --timeout=600 --delete --delete-excluded --delete-delay --delay-updates --exclude "ppc64" --exclude "aarch64" --exclude "ppc64le" $NETWORK_MIRROR::fedora-epel/$version/ $DESTINATION_TOP/$version/
