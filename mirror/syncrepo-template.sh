@@ -8,15 +8,15 @@
 # lot of traffic.
 
 # Directory where the repo is stored locally. Example: /srv/repo
-target=""
+target="/export/data/mirror/archlinux"
 
 # Directory where files are downloaded to before being moved in place.
 # This should be on the same filesystem as $target, but not a subdirectory of $target.
 # Example: /srv/tmp
-tmp=""
+tmp="/export/data/mirror/tmp"
 
 # Lockfile path
-lock="/var/lock/syncrepo.lck"
+lock="/var/lock/subsys/arch_mirror"
 
 # If you want to limit the bandwidth used by rsync set this.
 # Use 0 to disable the limit.
@@ -28,12 +28,12 @@ bwlimit=0
 # rsync://rsync.archlinux.org/ftp_tier1
 # Otherwise chose a tier 1 mirror from this list and use its rsync URL:
 # https://www.archlinux.org/mirrors/
-source_url=''
+source_url='rsync://mirror.liquidtelecom.com/archlinux'
 
 # An HTTP(S) URL pointing to the 'lastupdate' file on your chosen mirror.
 # If you are a tier 1 mirror use: http://rsync.archlinux.org/lastupdate
 # Otherwise use the HTTP(S) URL from your chosen mirror.
-lastupdate_url=''
+lastupdate_url='http://mirror.liquidtelecom.com/archlinux/lastupdate'
 
 #### END CONFIG
 
