@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-MINOR_VERSIONS=(6 7)
+MINOR_VERSIONS=(6 7 8)
 LOCK_FILE=/var/lock/subsys/epel_mirror
 NETWORK_MIRROR=mirror.liquidtelecom.com
 DESTINATION_TOP=/export/data/mirror/EPEL
