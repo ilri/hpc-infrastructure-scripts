@@ -216,18 +216,20 @@ function main() {
                         # error because Gluster will re-create it upon heal.
                         [[ $DEBUG = 'yes' ]] && echo "WARN: exists, belongs, but missing .glusterfs link for: ${BRICK_PATH}/${line}"
 
-                        echo "INFO: creating .glusterfs link: ${BRICK_PATH}/${line} → $FILE_GLUSTERFS_PATH"
+                        if [[ $DRY_RUN = 'no' ]]; then
+                            echo "INFO: creating .glusterfs link: ${BRICK_PATH}/${line} → $FILE_GLUSTERFS_PATH"
 
-                        # make sure the target directory exists in .glusterfs!
-                        # we need to create these two independently so that we
-                        # can enforce the permissions. A single `mkdir -p` only
-                        # ensures the permissions on the final directory, but
-                        # not on the intermediate directories. Also, I think
-                        # this is easier than messing with umask or chown.
-                        mkdir -m 700 -p "${BRICK_PATH}/.glusterfs/${FILE_GFID:0:2}"
-                        mkdir -m 700 -p "${BRICK_PATH}/.glusterfs/${FILE_GFID:0:2}/${FILE_GFID:2:2}"
+                            # make sure the target directory exists in .glusterfs!
+                            # we need to create these two independently so that we
+                            # can enforce the permissions. A single `mkdir -p` only
+                            # ensures the permissions on the final directory, but
+                            # not on the intermediate directories. Also, I think
+                            # this is easier than messing with umask or chown.
+                            mkdir -m 700 -p "${BRICK_PATH}/.glusterfs/${FILE_GFID:0:2}"
+                            mkdir -m 700 -p "${BRICK_PATH}/.glusterfs/${FILE_GFID:0:2}/${FILE_GFID:2:2}"
 
-                        ln "${BRICK_PATH}/${line}" "$FILE_GLUSTERFS_PATH"
+                            ln "${BRICK_PATH}/${line}" "$FILE_GLUSTERFS_PATH"
+                        fi
                     # check if the "real" file's inode matches the .glusterfs
                     # link file's inode. If Gluster is working properly these
                     # will be same. If not, I *think* we can just delete them
