@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# ghetto-heal.sh v1.2.1
+# ghetto-heal.sh v1.2.2
 #
 # Copies files from one local brick to remote bricks in an attempt to fix issues
 # where files may be on the wrong brick, causing them to be shown with a sticky
