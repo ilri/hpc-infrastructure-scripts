@@ -108,8 +108,6 @@ function main() {
 
     while read -r line; do
         FILE_NAME=$(basename "${BRICK_PATH}/${line}")
-        # get the file name's hash according to gf_dm_hash.py and strip the trailing "L"
-        FILE_NAME_DM_HASH=$("$GF_DM_HASH_PATH" "$FILE_NAME" | sed 's/L$//')
 
         # check if the file is actually present on this brick and only try to
         # get its GFID if it exists. Unset FILE_GFID just in case, as its a
@@ -138,6 +136,9 @@ function main() {
         # construct DHT layout start / end for current directory on this brick
         FILE_PARENT_DIR_DHT_MIN="0x${FILE_PARENT_DIR_DHT:16:8}"
         FILE_PARENT_DIR_DHT_MAX="0x${FILE_PARENT_DIR_DHT:24:8}"
+
+        # get the file name's hash according to gf_dm_hash.py and strip the trailing "L"
+        FILE_NAME_DM_HASH=$("$GF_DM_HASH_PATH" "$FILE_NAME" | sed 's/L$//')
         
         # check the DHT to see if the file belongs on this brick
         if [[ $FILE_NAME_DM_HASH -gt $FILE_PARENT_DIR_DHT_MIN && $FILE_NAME_DM_HASH -lt $FILE_PARENT_DIR_DHT_MAX ]]; then
