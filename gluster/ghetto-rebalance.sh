@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# ghetto-rebalance.sh v1.3.1
+# ghetto-rebalance.sh v1.3.2
 #
 # Checks a list of files on a Gluster volume's brick mount point and removes
 # files that don't belong (according to their file name and the layout, see
