@@ -33,6 +33,8 @@ set -o errexit
 readonly ARGS="$@"
 readonly HOSTNAME=$(hostname -s)
 readonly PROGNAME=$(basename "$0")
+# see: https://joejulian.name/post/dht-misses-are-expensive/
+readonly GF_DM_HASH_PATH=/root/gf_dm_hash.py
 readonly RSYNC_OPTS='-aAXv --quiet --protect-args'
 export RSYNC_RSH='ssh -T -c aes256-gcm@openssh.com -x -o Compression=no -o ControlMaster=auto -o ControlPath=/root/.ssh/control-%L-%r@%h:%p -o ControlPersist=60'
 LOCAL_BRICK='unset'
@@ -93,6 +95,12 @@ function parse_options() {
 }
 
 function check_sanity() {
+    if [[ ! -x "$GF_DM_HASH_PATH" ]]; then
+        echo "ERROR: Make sure $GF_DM_HASH_PATH exists and is executable. See: https://joejulian.name/post/dht-misses-are-expensive/"
+
+        exit 1
+    fi
+
     if [[ $LOCAL_BRICK == 'unset' || $INPUT_FILE == 'unset' || $VOLUME_NAME == 'unset' ]]; then
         echo "ERROR: Please make sure the local brick path, input file, and volume name are set."
         echo
@@ -218,6 +226,44 @@ function main() {
                 fi # if zero root
 
             fi # if ! -s
+
+            FILE_PARENT_DIR=$(dirname "${LOCAL_BRICK}/${line}")
+
+            # check if the file's parent directory is present so we can get its DHT
+            # layout. This shouldn't be necessary, but it also serves to verify the
+            # formatting of the input file.
+            if [[ ! -d "$FILE_PARENT_DIR" ]]; then
+                [[ $DEBUG = 'yes' ]] && echo "WARN: parent dir does not exist: ${LOCAL_BRICK}/${line}"
+
+                (( FILES_CONSIDERED_COUNT+=1 ))
+
+                continue
+            fi
+
+            # get the parent directory's DHT in hex
+            FILE_PARENT_DIR_DHT=$(getfattr -n trusted.glusterfs.dht -h -e hex "$FILE_PARENT_DIR" 2> /dev/null | grep 0x | grep -o -E '([a-f]|[0-9]){32}$')
+            # construct DHT layout start / end for current directory on this brick
+            FILE_PARENT_DIR_DHT_MIN="0x${FILE_PARENT_DIR_DHT:16:8}"
+            FILE_PARENT_DIR_DHT_MAX="0x${FILE_PARENT_DIR_DHT:24:8}"
+
+            # get the file name's hash according to gf_dm_hash.py and strip the trailing "L"
+            FILE_NAME_DM_HASH=$("$GF_DM_HASH_PATH" "${LOCAL_BRICK}/${line}" | sed 's/L$//')
+
+            # check the DHT to see if the file belongs on this brick. If yes, we
+            # can skip copying it to all other bricks to save time. Gluster will
+            # heal it to a replica when the file is accessed next and the ghetto
+            # rebalance script will remove it from any bricks where it doesn't
+            # belong. If the file does not belong on this brick then we should
+            # definitely copy it to all the other bricks.
+            if [[ $FILE_NAME_DM_HASH -gt $FILE_PARENT_DIR_DHT_MIN && $FILE_NAME_DM_HASH -lt $FILE_PARENT_DIR_DHT_MAX ]]; then
+                echo "INFO: exists and belongs on this brick, skipping: ${LOCAL_BRICK}/${line}"
+
+                (( FILES_PROCESSED_COUNT+=1 ))
+
+                continue
+            else
+                echo "WARN: exists, but does not belong, copying to other bricks: ${LOCAL_BRICK}/${line}"
+            fi
 
             # copy file to remote bricks
             for remote_brick in $REMOTE_BRICKS; do
