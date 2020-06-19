@@ -107,8 +107,6 @@ function main() {
     FILES_CONSIDERED_COUNT=0
 
     while read -r line; do
-        FILE_NAME=$(basename "${BRICK_PATH}/${line}")
-
         # check if the file is actually present on this brick and only try to
         # get its GFID if it exists. Unset FILE_GFID just in case, as its a
         # global variable and we don't want to be reading it if it was set in
@@ -136,6 +134,10 @@ function main() {
         # construct DHT layout start / end for current directory on this brick
         FILE_PARENT_DIR_DHT_MIN="0x${FILE_PARENT_DIR_DHT:16:8}"
         FILE_PARENT_DIR_DHT_MAX="0x${FILE_PARENT_DIR_DHT:24:8}"
+
+        # get the file name from the path so we can compute its hash without the
+        # directory components (GlusterFS layout is applied to directories).
+        FILE_NAME=$(basename "${BRICK_PATH}/${line}")
 
         # get the file name's hash according to gf_dm_hash.py and strip the trailing "L"
         FILE_NAME_DM_HASH=$("$GF_DM_HASH_PATH" "$FILE_NAME" | sed 's/L$//')
