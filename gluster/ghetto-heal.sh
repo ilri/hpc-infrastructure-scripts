@@ -246,8 +246,12 @@ function main() {
             FILE_PARENT_DIR_DHT_MIN="0x${FILE_PARENT_DIR_DHT:16:8}"
             FILE_PARENT_DIR_DHT_MAX="0x${FILE_PARENT_DIR_DHT:24:8}"
 
+            # get the file name from the path so we can compute its hash without the
+            # directory components (GlusterFS layout is applied to directories).
+            FILE_NAME=$(basename "${LOCAL_BRICK}/${line}")
+
             # get the file name's hash according to gf_dm_hash.py and strip the trailing "L"
-            FILE_NAME_DM_HASH=$("$GF_DM_HASH_PATH" "${LOCAL_BRICK}/${line}" | sed 's/L$//')
+            FILE_NAME_DM_HASH=$("$GF_DM_HASH_PATH" "$FILE_NAME" | sed 's/L$//')
 
             # check the DHT to see if the file belongs on this brick. If yes, we
             # can skip copying it to all other bricks to save time. Gluster will
