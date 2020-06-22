@@ -8,16 +8,22 @@ There are a few obvious signs that something is wrong with your volume, as seen 
 
 1. File names with question marks for status information:
 
-    -??????????  ? ?     ?        ?            ? htoprc
+```
+-??????????  ? ?     ?        ?            ? htoprc
+```
 
 2. Duplicate (or triplicate) files:
 
-    -rw-rw-r--.  1 aorth aorth  679 Jun  6 13:46 htoprc
-    -rw-rw-r--.  1 aorth aorth  679 Jun  6 13:46 htoprc
+```
+-rw-rw-r--.  1 aorth aorth  679 Jun  6 13:46 htoprc
+-rw-rw-r--.  1 aorth aorth  679 Jun  6 13:46 htoprc
+```
 
 3. Files with a sticky bit set (usually owned by root, though not always):
 
-    ---------T. 2 root  root   0 Jul 31 14:15 src.zip
+```
+---------T. 2 root  root   0 Jul 31 14:15 src.zip
+```
 
 ## How it Works
 GlusterFS uses a distributed hash table (DHT) to find and place files evenly on bricks across the storage cluster. Directories on each brick are assigned a "layout" range using the [*Elastic Hashing Algorithm*](https://www.svennd.be/wp-content/uploads/2018/06/gluster_architecture.pdf) (inspired by Amazon Dynamo) and files are placed accordingly based on their file names (not based on metadata).
