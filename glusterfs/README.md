@@ -47,6 +47,8 @@ Or checking for duplicates on the FUSE client mount:
 
 ```
 # find /home/[a-j]* -type f | sort | uniq -c | grep -E "^\s+[2-9]" | sed 's/^[[:space:]]\+[[:digit:]]\+[[:space:]]//' | sed 's./home/..' > /tmp/home-aj-duplicates.txt
+```
+
 ## How it Works
 GlusterFS uses a distributed hash table (DHT) to find and place files evenly on bricks across the storage cluster. Directories on each brick are assigned a "layout" range using the [*Elastic Hashing Algorithm*](https://www.svennd.be/wp-content/uploads/2018/06/gluster_architecture.pdf) (inspired by Amazon Dynamo) and files are placed accordingly based on their file names (not based on metadata).
 
