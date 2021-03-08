@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# ghetto-heal.sh v1.2.3
+# ghetto-heal.sh v1.2.4
 #
 # Copies files from one local brick to remote bricks in an attempt to fix issues
 # where files may be on the wrong brick, causing them to be shown with a sticky
@@ -142,7 +142,7 @@ function check_sanity() {
     if [[ $GLUSTER_VOLUME_MATCH -eq 1 ]]; then
         # get a list of bricks from gluster volume info (local bricks will be skipped
         # later when we are actually copying).
-        readonly REMOTE_BRICKS=$(gluster volume info homes | grep -E '^Brick[[:digit:]]' | cut -d ' ' -f2)
+        readonly REMOTE_BRICKS=$(gluster volume info "$VOLUME_NAME" | grep -E '^Brick[[:digit:]]' | cut -d ' ' -f2)
     else
         echo "ERROR: Gluster volume does not exist: $VOLUME_NAME"
     
