@@ -289,7 +289,7 @@ function main() {
             (( MISSING_FILES_COUNT+=1 ))
         fi # if file exists
     
-   (( FILES_PROCESSED_COUNT+=1 ))
+    (( FILES_PROCESSED_COUNT+=1 ))
     
     done < "$INPUT_FILE"
     
