@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-only
 #
-# ghetto-purge.py v0.0.1
+# ghetto-purge.py v0.0.2
 #
 # Read files and directories from an input file, one per line, and attempt to
 # remove them from the GlusterFS brick along with their .glusterfs links. This
