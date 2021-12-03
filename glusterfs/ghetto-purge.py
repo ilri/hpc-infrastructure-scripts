@@ -58,7 +58,7 @@ def main():
 
                 process_directory(brick_path, path_to_analyze)
 
-            elif Path(f"{path_to_analyze}").is_file():
+            else:
                 process_file(brick_path, path_to_analyze)
         else:
             if args.debug:
@@ -88,7 +88,7 @@ def descend_into_directory(brick_path, path):
                 # over entries named in the input file.
                 process_directory(brick_path, entry.path)
 
-            elif entry.is_file():
+            else:
                 process_file(brick_path, entry.path)
 
 
