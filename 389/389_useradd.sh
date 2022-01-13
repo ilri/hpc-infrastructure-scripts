@@ -31,7 +31,7 @@ function usage {
 Usage: $PROGNAME -f FirstName -l LastName [ -u username -i userid -g groupid -p password -e email]
 
 Optional arguments:
-    -e: user email address
+    -e: user email address (NOT a CGIAR address!)
     -g: numeric groupid (default: latest available)
     -i: numeric userid (default: latest available)
     -p: password (default: $DEF_PASSWORD)
@@ -77,6 +77,16 @@ fi
 if [[ -z "$USERNAME" ]]; then
     FIRSTINITIAL=$(echo $FIRSTNAME | cut -c1)
     USERNAME=$(echo "${FIRSTINITIAL}${LASTNAME}" | tr '[:upper:]' '[:lower:]')
+fi
+
+# Make sure the email address is NOT a CGIAR one so that we can contact
+# the user after they leave the institute!
+if [[ ! -z "$EMAIL" ]]; then
+    if [[ "$EMAIL" =~ cgiar\.org ]]; then
+        echo "Email should be a non-CG address so we can contact the user after they leave."
+
+        exit 1
+    fi
 fi
 
 # Print LDIF for user account
