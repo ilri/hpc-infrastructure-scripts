@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-only
 #
-# ghetto-purge.py v0.0.2
+# ghetto-purge.py v0.0.3
 #
 # Read files and directories from an input file, one per line, and attempt to
 # remove them from the GlusterFS brick along with their .glusterfs links. This
@@ -32,18 +32,12 @@ def main():
         # Note that we have to remove \n from the line
         path_to_analyze = f"{brick_path}/{line.strip()}"
 
-        # To be safe I check if this is a symlink first, because we only
-        # want to process entries named in our input file and not follow them
-        # all over the file system. I am not sure how to deal with these yet...
-        # pathlib's exists() will follow symlinks and return False if they are
-        # broken, for example (note that pathlib's is_dir() is different than
-        # os.is_dir(), and the latter has follow_symlinks(false)).
-        if Path(f"{path_to_analyze}").is_symlink():
-            print(f"Skipping symlink: {path_to_analyze}")
-
-            continue
-
-        if Path(f"{path_to_analyze}").exists():
+        # Pathlib's Path.exists() will return false if the path is a broken
+        # symlink so we need to check for the symlink case here as well.
+        if (
+            Path(f"{path_to_analyze}").exists()
+            or Path(f"{path_to_analyze}").is_symlink()
+        ):
             if Path(f"{path_to_analyze}").is_dir():
                 if args.debug:
                     print(f"Descend into: {path_to_analyze}")
@@ -122,8 +116,22 @@ def process_file(brick_path, path):
     if args.debug:
         print(f"Processing file: {path}")
 
-    # Get a string representation of the xattr from hex bytes
-    file_gfid = os.getxattr(path, "trusted.gfid").hex()
+    # Try to get a string representation of the xattr from hex bytes. We need
+    # to try/except because os.getxattr() returns FileNotFoundError when the
+    # file is a broken symlink, and OSError when the link goes somewhere that
+    # does not have GlusterFS metadata. This happens in the case of eg Python
+    # virtual environments in user's home directories and it is not a problem
+    # to remove it and return without trying to remove a .glusterfs hard link.
+    try:
+        file_gfid = os.getxattr(path, "trusted.gfid").hex()
+    except (FileNotFoundError, OSError):
+        if not args.dry_run:
+            os.remove(path)
+
+        print(f'{"(DRY RUN) " if args.dry_run else ""}Removed symlink: {path}')
+
+        return
+
     file_glusterfs_path = dot_glusterfs_path(brick_path, file_gfid)
 
     if Path(path).exists():
