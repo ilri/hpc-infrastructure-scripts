@@ -4,9 +4,9 @@
 #
 # migrate-ldif-389-ds-1.4.awk v1.0.0
 #
-# Awk script to migrate an LDIF from RFC 2307 to RFC 2307bis in addition to
-# the other schema changes I found with our particular data when upgrading
-# from 389-ds 1.3.x (CentOS 7) to 1.4.x (CentOS Stream 8).
+# Awk script to migrate an LDIF from RFC 2307 schema to RFC 2307bis in addition
+# to some other changes to attributes that I found with our particular data when
+# upgrading from 389-ds 1.3.x (CentOS 7) to 1.4.x (CentOS Stream 8).
 #
 # To use this script, stop your 389-ds 1.3.x instance and export an LDIF:
 #
@@ -51,7 +51,7 @@ BEGIN {}
                 print;
                 break;
             # givenName is not allowed. Note we also check for base64 encoded
-            # attribu tes with a double colon here.
+            # attributes with a double colon here.
             case /^givenName:+ .*/:
                 sub(/^givenName:+ .*/, "#&");
                 print;
