@@ -92,18 +92,16 @@ fi
 # Print LDIF for user account
 printf 'dn: uid=%s, ou=People, dc=ilri,dc=cgiar,dc=org\n' "$USERNAME"
 printf 'changetype: add\n'
-printf 'givenName: %s\n' "$FIRSTNAME"
-printf 'sn: %s\n' "$LASTNAME"
 printf 'loginShell: %s\n' "$DEF_SHELL"
 printf 'gidNumber: %d\n' "$GROUPID"
 printf 'uidNumber: %d\n' "$USERID"
 printf 'objectClass: top\n'
-printf 'objectClass: person\n'
-printf 'objectClass: organizationalPerson\n'
-printf 'objectClass: inetorgperson\n'
+printf 'objectClass: nsPerson\n'
+printf 'objectClass: nsAccount\n'
+printf 'objectClass: nsOrgPerson\n'
 printf 'objectClass: posixAccount\n'
 printf 'uid: %s\n' "$USERNAME"
-printf 'gecos: %s %s\n' "$FIRSTNAME" "$LASTNAME"
+printf 'displayName: %s %s\n' "$FIRSTNAME" "$LASTNAME"
 printf 'cn: %s %s\n' "$FIRSTNAME" "$LASTNAME"
 # send password in clear text, so 389 can hash using the best scheme
 # see: https://lists.fedoraproject.org/pipermail/389-users/2012-August/014908.html
@@ -116,14 +114,15 @@ printf '\n'
 printf 'dn: cn=%s, ou=Groups, dc=ilri,dc=cgiar,dc=org\n' "$USERNAME"
 printf 'changetype: add\n'
 printf 'gidNumber: %d\n' "$GROUPID"
-printf 'memberUid: %s\n' "$USERNAME"
+printf 'member: uid=%s,ou=People,dc=ilri,dc=cgiar,dc=org\n' "$USERNAME"
 printf 'objectClass: top\n'
-printf 'objectClass: groupofuniquenames\n'
-printf 'objectClass: posixgroup\n'
+printf 'objectClass: groupOfNames\n'
+printf 'objectClass: posixGroup\n'
+printf 'objectClass: nsMemberOf\n'
 printf 'cn: %s\n\n' "$USERNAME"
 
 # add user to SSH group
 printf 'dn: cn=ssh, ou=Groups, dc=ilri,dc=cgiar,dc=org\n'
 printf 'changetype: modify\n'
-printf 'add: memberuid\n'
-printf 'memberuid: %s\n' "$USERNAME"
+printf 'add: member\n'
+printf 'member: uid=%s,ou=People,dc=ilri,dc=cgiar,dc=org\n' "$USERNAME"
