@@ -90,7 +90,7 @@ if [[ ! -z "$EMAIL" ]]; then
 fi
 
 # Print LDIF for user account
-printf 'dn: uid=%s, ou=People, dc=ilri,dc=cgiar,dc=org\n' "$USERNAME"
+printf 'dn: uid=%s,ou=People,dc=ilri,dc=cgiar,dc=org\n' "$USERNAME"
 printf 'changetype: add\n'
 printf 'loginShell: %s\n' "$DEF_SHELL"
 printf 'gidNumber: %d\n' "$GROUPID"
@@ -111,7 +111,7 @@ printf 'homeDirectory: /home/%s\n' "$USERNAME"
 
 # Print LDIF for primary group
 printf '\n'
-printf 'dn: cn=%s, ou=Groups, dc=ilri,dc=cgiar,dc=org\n' "$USERNAME"
+printf 'dn: cn=%s,ou=Groups,dc=ilri,dc=cgiar,dc=org\n' "$USERNAME"
 printf 'changetype: add\n'
 printf 'gidNumber: %d\n' "$GROUPID"
 printf 'member: uid=%s,ou=People,dc=ilri,dc=cgiar,dc=org\n' "$USERNAME"
@@ -122,7 +122,7 @@ printf 'objectClass: nsMemberOf\n'
 printf 'cn: %s\n\n' "$USERNAME"
 
 # add user to SSH group
-printf 'dn: cn=ssh, ou=Groups, dc=ilri,dc=cgiar,dc=org\n'
+printf 'dn: cn=ssh,ou=Groups,dc=ilri,dc=cgiar,dc=org\n'
 printf 'changetype: modify\n'
 printf 'add: member\n'
 printf 'member: uid=%s,ou=People,dc=ilri,dc=cgiar,dc=org\n' "$USERNAME"
