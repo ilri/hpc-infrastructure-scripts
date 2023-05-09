@@ -43,7 +43,7 @@ Import to 389 with the LDAP Directory Admin:
 
 or, safer, a dedicated admin user:
 
-    ldapmodify -a -D "uid=user,ou=administrators,ou=topologymanagement,o=netscaperoot" -W -p 389 -h localhost -f /tmp/blah.ldif
+    ldapmodify -a -D "cn=admin,ou=Special Users,dc=ilri,dc=cgiar,dc=org" -W -p 389 -h localhost -f /tmp/blah.ldif
 EOF
 
     exit 0
