@@ -23,7 +23,7 @@
 readonly PROGNAME=$(basename $0)
 
 # some defaults
-readonly DEF_SHELL=/bin/bash
+readonly DEF_SHELL=/usr/bin/bash
 readonly DEF_PASSWORD=redhat
 
 function usage {
