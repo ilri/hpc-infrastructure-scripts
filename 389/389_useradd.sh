@@ -27,7 +27,7 @@ readonly DEF_SHELL=/usr/bin/bash
 
 function usage {
     cat <<- EOF
-Usage: $PROGNAME -f FirstName -l LastName [ -u username -i userid -g groupid -p password -e email]
+Usage: $PROGNAME -f FirstName -l LastName -G location [ -u username -i userid -g groupid -p password -e email]
 
 Optional arguments:
     -e: user email address (NOT a CGIAR address!)
@@ -55,12 +55,13 @@ function genpass() {
       | head -c 20; echo
 }
 
-while getopts e:f:g:i:l:p:u:h OPTION
+while getopts e:f:g:G:i:l:p:u:h OPTION
 do
     case $OPTION in
         e) EMAIL=$OPTARG;;
         f) FIRSTNAME=$OPTARG;;
         g) GROUPID=$OPTARG;;
+        G) LOCATION=$OPTARG;;
         i) USERID=$OPTARG;;
         l) LASTNAME="$OPTARG";;
         p) PASSWORD=$OPTARG;;
@@ -79,6 +80,15 @@ fi
 if [[ -z "$GROUPID" ]]; then
     LATESTGID=$(ldapsearch -x 'objectclass=posixGroup' gidNumber | grep -v \^dn | grep -v \^\$ | sed -e 's/gidNumber: //g' | grep -E '^[0-9]{3,4}$' | sort -n | tail -n 1)
     GROUPID=$((LATESTGID + 1))
+fi
+if [[ ! -z "$LOCATION" ]]; then
+    if [[ ! "$LOCATION" =~ (addis|nairobi) ]]; then
+        echo "Location must be addis or nairobi."
+
+        exit 1
+    fi
+else
+    usage
 fi
 if [[ -z "$USERNAME" ]]; then
     FIRSTINITIAL=$(echo $FIRSTNAME | cut -c1)
@@ -127,8 +137,8 @@ printf 'objectClass: posixGroup\n'
 printf 'objectClass: nsMemberOf\n'
 printf 'cn: %s\n\n' "$USERNAME"
 
-# add user to SSH group
-printf 'dn: cn=ssh,ou=Groups,dc=ilri,dc=cgiar,dc=org\n'
+# add user to appropriate group
+printf 'dn: cn=%s,ou=Groups,dc=ilri,dc=cgiar,dc=org\n' "$LOCATION"
 printf 'changetype: modify\n'
 printf 'add: member\n'
 printf 'member: uid=%s,ou=People,dc=ilri,dc=cgiar,dc=org\n' "$USERNAME"
