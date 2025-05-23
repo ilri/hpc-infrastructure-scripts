@@ -24,7 +24,6 @@ readonly PROGNAME=$(basename $0)
 
 # some defaults
 readonly DEF_SHELL=/usr/bin/bash
-readonly DEF_PASSWORD=redhat
 
 function usage {
     cat <<- EOF
@@ -34,7 +33,7 @@ Optional arguments:
     -e: user email address (NOT a CGIAR address!)
     -g: numeric groupid (default: latest available)
     -i: numeric userid (default: latest available)
-    -p: password (default: $DEF_PASSWORD)
+    -p: password (default: generate random string)
     -u: username
 
 Import to 389 with the LDAP Directory Admin:
@@ -47,6 +46,13 @@ or, safer, a dedicated admin user:
 EOF
 
     exit 0
+}
+
+function genpass() {
+    dd if=/dev/random bs=1 count=1 2>/dev/null \
+      | sha256sum -b \
+      | sed 's/ .*//' \
+      | head -c 20; echo
 }
 
 while getopts e:f:g:i:l:p:u:h OPTION
@@ -105,7 +111,7 @@ printf 'displayName: %s %s\n' "$FIRSTNAME" "$LASTNAME"
 printf 'cn: %s %s\n' "$FIRSTNAME" "$LASTNAME"
 # send password in clear text, so 389 can hash using the best scheme
 # see: https://lists.fedoraproject.org/pipermail/389-users/2012-August/014908.html
-printf 'userPassword: %s\n' "${PASSWORD:-$DEF_PASSWORD}"
+printf 'userPassword: %s\n' "${PASSWORD:-$(genpass)}"
 printf 'homeDirectory: /home/%s\n' "$USERNAME"
 [[ ! -z "$EMAIL" ]] && printf 'mail: %s\n' "$EMAIL"
 
